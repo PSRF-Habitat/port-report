@@ -4,4 +4,10 @@ format: html
 editor: visual
 ---
 
-## Kari's script
+## Here we gooooo....
+
+This is a note for making the grey code section: ctrl + alt + i for this command!
+
+```{r}
+
+```
