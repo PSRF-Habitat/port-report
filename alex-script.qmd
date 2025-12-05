@@ -5,3 +5,7 @@ editor: visual
 ---
 
 Test changes!
+
+```{r}
+#here is some awesome code that I want you to use!!! 
+```
