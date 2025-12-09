@@ -1,0 +1,236 @@
+survey_id,site_name,site_country,latitude,longitude,date_start,date_end,percent_disease_red,percent_disease_purple,black_spot_red,black_spot_purple,wasting_disease_red,wasting_disease_purple,surface_condition,surge_condition,temp_surface,temp_5m,temp_10m,notes
+0055f33a-9c05-408f-8a70-1ff68d526180,Goby Gardens,United States of America,47.631907,-122.94162,06/04/2023,06/04/2023,,,false,false,false,false,Sunny,Low,14.4,13.3,11.1,""
+036d683b-1c95-4794-9bec-e18c08af01dc,McCurdy Point,United States of America,48.138791,-122.844791,07/06/2025,08/01/2025,,,false,false,false,false,Sunny,Low,12.8,11.1,,""
+03dfff10-f865-43bb-adb8-9497ea5b9ea5,Saltwater State Park,United States of America,47.373282,-122.327981,08/13/2023,08/18/2023,,,false,false,false,false,Sunny,Low,16.1,13.9,13.3,Bull kelp present off transect
+0699e69b-39bd-4bd1-beef-af37443cad1b,Owen Beach,United States of America,47.31752,-122.53389,06/11/2024,06/26/2024,0.0,0.0,false,false,false,false,Sunny,Low,12.8,11.7,10.6,""
+069c9059-c446-4004-81c1-f65e32266924,Lincoln Park,United States of America,47.536153,-122.397348,05/31/2025,05/31/2025,,,false,false,false,false,Rainy,Low,11.1,10.6,10.6,""
+0706a9be-db82-4ae1-8db2-e4e9688f3598,Sirens of Spring ,United States of America,47.618148,-122.360893,08/29/2025,08/29/2025,,,false,false,false,false,Sunny,Low,,,11.1,"~10 ft visibility
+ROV/diver overlap"
+099dcac6-b372-48f7-a45e-6ba794daf477,Edmonds Shell Creek,United States of America,47.819549,-122.37838,07/12/2025,07/12/2025,0.0,0.0,false,false,false,false,Sunny,Low,13.89,12.78,,""
+09adb773-4717-4323-a48b-8dc75c74ef96,Ebeys Landing,United States of America,48.18384,-122.7004,08/02/2025,08/02/2025,,,false,false,false,false,Cloudy,Low,12.78,12.22,,""
+0a4b7918-dd81-43ca-8a91-dfe1fedee1b3,Fox Island East Wall,United States of America,47.228194,-122.589757,08/11/2024,08/11/2024,,,false,false,false,false,Cloudy,Low,13.9,12.8,12.8,Cores only
+0a5317dc-9d10-49f9-a6f0-2aad781e01ff,Devils Head,United States of America,47.166934,-122.761201,08/30/2025,08/30/2025,0.0,0.0,false,false,false,false,Cloudy,Low,15.0,13.9,,"More cobble substrate shallower than 10', mostly sand at target depth range, more kelp between 17'-20'"
+0be57124-70d1-47ac-b6fe-007d2414f053,Edmonds Shell Creek,United States of America,47.819549,-122.37838,06/17/2023,07/01/2023,,,false,false,false,false,Sunny,Low,12.2,11.1,,""
+0c7c11a3-3ad4-465a-9caf-81b799d50911,Smallpox Bay,United States of America,48.541072,-123.161846,09/25/2022,09/25/2022,,,false,false,false,false,Sunny,Low,11.1,10.0,10.0,"Sunflower star observed off-transect on inverts 6.
+Wire Weed s muticum spotted on algae 6."
+0d4c4fd8-ed98-43ad-9bd2-347a54f2f831,North Beach,United States of America,48.144779,-122.778533,07/06/2022,07/07/2022,,,false,false,false,false,Cloudy,Low,11.0,11.0,10.5,""
+0e024f8c-3fce-4bc2-8e30-fb2a6ee18599,Smallpox Bay,United States of America,48.541072,-123.161846,09/26/2025,09/26/2025,,,false,false,false,false,Cloudy,Low,10.6,10.0,10.0,""
+0e399207-8758-4bf2-8f26-ec46b53495e6,Pulali Point,United States of America,47.735708,-122.85479,06/08/2024,06/08/2024,,,,,,,Sunny,Low,16.1,12.8,10.6,""
+109af32f-c067-40c6-8096-9fa921bbcbc6,South Shaw Island,United States of America,48.548389,-122.953611,09/27/2025,09/27/2025,,,,,,,Sunny,Low,,,12.2,viz ~ 20-25ft ROV/diver overlap
+10dbe508-93a5-45fb-a47e-a836a53396f2,Rosario Head,United States of America,48.415477,-122.66477,08/10/2024,08/10/2024,,,false,false,false,false,Cloudy,Low,13.9,12.8,12.8,""
+11fedf5b-7e36-447a-b3fe-7c2b1db6dacf,Rosario Head,United States of America,48.415477,-122.66477,08/12/2022,08/13/2022,,,false,false,true,false,Sunny,Medium,12.0,12.0,11.0,"Summary sheet says Wasting Present on Purple BUT I1/I2 page (Michelle), and I3 did not record purple and says Wasting was seen on RED. - I have recorded Wasting Present on Red on basic info page.
+Many missing time start/stops.
+I5 - Maddie put ? next to Rainbow, but she marked it in the column so I put it in.
+Just noticed that UPC entry, there is C for Cobble pre-populated but there is also Cobble for WASHINGTON where a size is defined. As we're in Washington, I entered according to the Washington definition. Should there be 2 Cobbles in the DB and if so, should I use WASHINGTON Cobble? This is not mentioned in the special considerations for Washington."
+140f5b76-785e-47b9-9faf-aec111010f79,Cattle Point,United States of America,48.45148,-122.961402,09/16/2023,09/16/2023,,,false,false,false,false,Cloudy,Low,12.2,12.2,,""
+164ac12b-6a5c-4928-99db-f60701cda5a3,Salmon Beach,United States of America,47.296017,-122.53165,08/14/2024,08/15/2024,0.0,0.0,false,false,false,false,Cloudy,Low,10.6,8.9,,No Red or Purple Urchin seen.
+16d84c98-ec4e-43b6-8d4f-589a04e53dca,Green Point,United States of America,48.118525,-123.315716,07/28/2024,07/28/2024,,,false,false,false,false,Sunny,Low,11.1,9.4,8.9,""
+1807e8b4-28d5-4bd7-98ff-4ddfec4dbd68,Blake Island South,United States of America,47.53049,-122.49498,09/30/2023,09/30/2023,,,false,false,false,false,Cloudy,Low,16.1,13.9,13.9,""
+19bcdf75-15e1-4704-8c37-ef3ee8b56b68,Point Dalco,United States of America,47.333519,-122.519126,07/09/2023,07/15/2023,,,false,false,false,false,Sunny,Low,12.8,12.2,12.2,""
+1a8afee9-25c2-47ff-996b-b832a64022fc,Partridge Point,United States of America,48.225837,-122.771572,05/26/2023,05/27/2023,,,false,false,false,false,Sunny,Low,12.2,11.1,,""
+1cd8201d-1716-4805-a4dd-1a8074cabe49,Ebeys Landing,United States of America,48.18384,-122.7004,07/02/2024,07/16/2024,,,false,false,false,false,Sunny,Low,12.8,12.2,10.6,""
+1ecb0d69-3255-4d57-9a5f-947c3a962a74,Goby Gardens,United States of America,47.631907,-122.94162,06/09/2024,06/09/2024,,,false,false,false,false,Sunny,Low,16.1,13.9,11.1,SFS spotted off-transect on core 1
+1efd1bac-9a7a-4797-be5f-02f9b032b7f1,Rosario Head,United States of America,48.415477,-122.66477,08/12/2023,08/12/2023,0.5,0.0,false,false,true,false,Sunny,Low,12.8,12.2,11.1,""
+216093c5-ef15-43d2-b9e4-6b310b8d44e6,Tongue Point,United States of America,48.256822,-124.275318,08/02/2024,08/02/2024,,11.5,,true,,true,Sunny,Low,12.2,10.0,8.9,Green/Pallid Urchin: 0% diseased
+21a09893-ec44-4542-978d-161a902ad897,Lowell Point,United States of America,48.11942,-122.48704,10/12/2024,10/12/2024,,,false,false,false,false,Sunny,Low,,12.2,,""
+22058258-b793-4bc7-9813-d2096dc10508,Deadmans Bay,United States of America,48.512846,-123.147129,09/15/2023,09/15/2023,,,false,false,false,false,Sunny,Low,11.1,11.1,11.1,""
+2257bef7-7260-4cee-a968-23e852d4038d,Ketron Island,United States of America,47.167661,-122.63057,08/25/2023,08/25/2023,,,false,false,false,false,Sunny,Low,16.1,15.0,13.9,""
+22afa883-31d3-4ce6-808e-0e0da9768fc5,Blake Island South,United States of America,47.53049,-122.49498,07/12/2024,07/12/2024,,,false,false,false,false,Sunny,Low,15.0,13.9,12.8,""
+23ebd573-d28d-42b1-8aa4-344d0c2e3785,Magnolia,United States of America,47.631423,-122.401099,07/30/2024,07/31/2024,0.0,0.0,false,false,false,false,Cloudy,Low,16.1,12.8,,""
+249562c6-130a-4fea-ac4c-8f5715e0cb95,Point Dalco,United States of America,47.333519,-122.519126,07/14/2024,07/14/2024,,,false,false,false,false,Sunny,Low,23.3,15.0,12.2,Greens present at wall lip.
+24a8a418-b31d-4895-bd03-5af463caf15b,Lower Elwha,United States of America,48.13964,-123.585069,07/27/2024,07/27/2024,0.0,0.0,false,false,false,false,Cloudy,Low,10.0,10.0,8.3,Very patchy boulder field. 
+24dd2a87-27bc-4b42-99f1-6376449dabb2,Point Whitehorn,United States of America,48.896331,-122.795095,06/23/2023,07/07/2023,,,false,false,false,false,Sunny,Low,12.2,12.2,,""
+25a985c7-988a-4bf9-80eb-9770f693e071,Squaxin Island,United States of America,47.16767,-122.895667,07/15/2025,07/16/2025,0.0,0.0,false,false,false,false,Sunny,Low,22.2,,,No Bull Kelp outside seed line; Site now dominated by Acid Weed (no brown algae seen on transect).
+273eac21-8818-4048-8c43-83cb7ee03e3a,Possession Point,United States of America,47.90005,-122.383133,10/09/2025,10/09/2025,,,false,false,false,false,Rainy,Low,12.8,12.2,12.2,Stellars!
+27719b07-2e2f-408d-90a5-4c4859f179f4,Point Caution,United States of America,48.563167,-123.025641,07/26/2024,08/16/2024,,,false,false,false,false,Sunny,Low,11.1,11.1,11.1,FHL Partner
+285d774a-4608-43fc-908f-e3ac5709d4e1,McCurdy Point,United States of America,48.138791,-122.844791,06/15/2024,06/15/2024,,,false,false,false,false,Cloudy,Low,12.8,12.2,12.2,High current at beginning of dive
+289ef082-9d57-43f0-a7ab-501ab19d24a4,Sekiu Point,United States of America,48.267782,-124.297828,08/09/2025,08/10/2025,,,false,false,false,false,Sunny,Low,,10.56,,"Derelict fishing gear.
+Weather foggy"
+2be9e327-ac96-49b0-a097-7ae25e27bb89,Pulali Point,United States of America,47.735708,-122.85479,06/03/2023,06/03/2023,,,false,false,false,false,Sunny,Low,11.1,10.6,10.0,""
+2c3b044d-18bd-483f-a97a-0020228175b9,Blake Island South,United States of America,47.53049,-122.49498,10/01/2022,10/01/2022,,,false,false,false,false,Sunny,Low,15.0,12.8,12.8,""
+2d6df85a-f6c8-4b05-bd35-7323dc889620,Freshwater Bay,United States of America,48.141606,-123.613191,07/15/2021,07/16/2021,,,,,,,"","",,10.0,,Cores only; UPC Cobble size range is 5-25cm; UPC 4 Substrate & Relief do not equal 30; All swaths were 1m wide. Subsampling distances were adjusted for this. 
+2f03a1a2-ec63-4ad1-b177-3f90ae8b838c,Lincoln Park,United States of America,47.536153,-122.397348,06/04/2022,06/27/2022,,,false,false,false,false,Rainy,Low,12.2,11.1,10.0,The numbers for transects of deep vs shallow are swapped.
+3710b046-1b59-45a8-8023-408596096548,Point Vashon,United States of America,47.512553,-122.473981,07/10/2023,07/10/2023,,,false,false,false,false,Cloudy,Low,12.2,12.2,12.2,""
+39b074cb-8a3e-493f-8c07-60ca3324f907,Magnolia,United States of America,47.631423,-122.401099,08/03/2022,09/01/2022,,,false,false,false,false,Cloudy,"",,12.0,,"current slack on 8/3.
+Viz too low for most fish transects on 8/3, so returned on 9/1 to do them.
+
+Observed some sea star wasting on a couple of juvenile E. traschellii, but abundant healthy juveniles were present throughout the area."
+3a0255f5-7301-4b8b-a739-02abf216b6b7,North Beach,United States of America,48.144779,-122.778533,07/23/2023,07/23/2023,,,false,false,false,false,Sunny,Low,12.2,12.2,12.2,""
+3a089a9d-593d-4700-8237-7fd77f70d73d,Jefferson Head,United States of America,47.744509,-122.475293,07/01/2024,07/30/2024,,,false,false,false,false,Sunny,Low,16.7,13.9,,"Vis too poor to conduct fish surveys on 7/1
+Fish completed 7/30"
+3eb51ecb-f109-41f8-82ae-d13440a34802,Derelict Conveyor,United States of America,48.855254,-122.730835,07/16/2022,07/17/2022,,,,,,,Cloudy,Low,54.0,52.0,,"green urchin wasting noted on invert T3, T6 (no green urchins counted)
+wire weed noted on T1,2"
+3f4844fb-67c5-459d-a9ee-3e0706bef208,Lowell Point,United States of America,48.11942,-122.48704,10/11/2025,10/11/2025,,,false,false,false,false,Rainy,Low,12.78,12.22,,""
+3fbf67aa-d05d-4bb5-b2fa-fd97d6e9b2bf,Tongue Point,United States of America,48.256822,-124.275318,08/08/2025,08/08/2025,,,false,false,false,false,Cloudy,Medium,10.0,10.0,10.0,Green urchin wasting
+3fcd8c05-bf60-47d4-b2a8-8b676dec3c6d,Rock 305,United States of America,47.95185,-124.6698,08/05/2024,08/05/2024,,,false,false,false,false,Cloudy,Medium,15.0,13.9,,"Very low vis, but fish transects were still completed"
+459827fb-95f0-477e-afcd-f283d20e666a,Tongue Point,United States of America,48.256822,-124.275318,07/29/2023,07/30/2023,1.0,15.0,false,true,true,true,Sunny,Low,12.2,11.1,8.3,""
+48cfe0f7-ea61-4737-904d-e9b740716e11,Derelict Conveyor,United States of America,48.855254,-122.730835,06/23/2023,06/25/2023,,,false,false,false,false,Sunny,Low,12.2,12.2,,Low viz on 6/24 (1.1m) called all dives
+48f425e2-3692-4f18-9ee3-8a457ee47315,Glen Acres,United States of America,47.48005,-122.448455,07/13/2024,07/13/2024,,,,,,,Sunny,Low,,13.3,,""
+4cb3c916-88cb-475f-a170-d0c494b7e658,Possession Point,United States of America,47.90005,-122.383133,10/11/2024,10/11/2024,,,false,false,false,false,Cloudy,Low,,12.2,12.2,""
+4fac351a-d182-4c29-88cf-37ca752923a7,Reef Point,United States of America,48.536839,-122.718458,09/06/2023,09/20/2023,,,false,false,false,false,Cloudy,Low,12.8,12.2,12.2,""
+50df92db-be04-4d9c-b68a-d7f5722fc695,Foulweather Bluff,"",47.941083,-122.6012,08/11/2024,08/13/2024,,,,,,,Sunny,Low,13.3,13.3,12.2,"issue on last scheduled survey day and were unable to
+leave the dock/complete the last 5 fish transects"
+538f3f7a-5611-45fa-8e62-a3ede8e537f6,Sund Rock,United States of America,47.435996,-123.12022,06/07/2024,06/07/2024,,,false,false,false,false,Sunny,Low,16.1,13.9,10.6,""
+53ab4276-1c22-4f52-a146-93d0978fa7c7,Wing Point,United States of America,47.615814,-122.488302,07/17/2025,08/15/2025,,,false,false,false,false,Sunny,Low,14.4,12.2,,Low vis 7/17
+5449dace-fd0b-4861-af89-c7a5c507abf3,Point Caution,United States of America,48.563167,-123.025641,07/29/2025,08/29/2025,,,,,,,N/A,Low,,,10.6,4 cores & 12 fish transects
+552430bd-cde9-4cac-8c51-800ff25c5d21,South Hat Island,United States of America,48.003363,-122.301536,10/20/2023,10/20/2023,,,false,false,false,false,Cloudy,Low,13.9,13.9,12.8,Storm two weeks prior tore up kelp bed
+561c74e5-1bc1-45a2-8dea-228c51cc4d53,Rosario Head,United States of America,48.415477,-122.66477,08/03/2025,08/03/2025,,,false,false,false,false,Cloudy,Low,12.22,11.11,11.11,""
+5665f64b-c798-4504-a3a7-05462f9ac1bc,South Hat Island,United States of America,48.003363,-122.301536,10/10/2025,10/10/2025,,,false,false,false,false,Cloudy,Low,12.78,12.22,12.22,""
+56f56fdb-42d5-4766-9a16-4bbd5e6fe24e,Sund Rock,United States of America,47.435996,-123.12022,06/02/2023,06/02/2023,,,false,false,false,false,Sunny,Low,13.9,11.1,10.0,""
+57471223-d757-47a8-a557-88f6d6522817,Deadmans Bay,United States of America,48.512846,-123.147129,09/13/2024,09/13/2024,,,false,false,true,false,Cloudy,Low,,,10.6,Noted on Kelp T4: Urchin wasting observed no details on how many/percent 
+5896026f-2ac3-49ea-ad10-e31ebfc78491,Cattle Point,United States of America,48.45148,-122.961402,09/27/2025,09/27/2025,,,false,false,false,false,Cloudy,Low,,,11.11,""
+58d3dd86-5ee5-41c3-a5dd-d6b64eebc5bc,Reuben Tarte,United States of America,48.612837,-123.097222,09/28/2025,09/28/2025,,,false,false,false,false,Cloudy,Low,11.67,11.11,11.11,""
+5aaae784-be9b-4c8d-987f-e724d2ebf75e,Smith Island,United States of America,48.318961,-122.849565,06/16/2024,06/16/2024,0.0,0.0,false,false,false,false,Cloudy,Low,11.1,11.1,11.1,Cores only
+5ac8f7c4-a2a0-4ca0-b7c6-4e018382b4e8,North Beach,United States of America,48.144779,-122.778533,08/30/2021,08/30/2021,,,,,,,"",Medium,,11.0,,Cores Only; UPC 6 Substrate does not equal 30; UPC Cobble size range is 5-25cm; All swaths were 1m wide. Subsampling distances were adjusted for this. 
+5d0e2a02-46c6-49dc-887e-ca9b82a41966,Lawrence Point,United States of America,48.66048,-122.741701,08/26/2024,08/26/2024,,,false,false,false,false,Rainy,Low,12.2,11.1,11.1,""
+5d7594ba-b910-4153-9630-7af6ddc5fd70,Jefferson Head,United States of America,47.744509,-122.475293,08/10/2023,08/11/2023,,,,,,,Sunny,Low,13.9,12.8,,"PSRF 2023 Bull Kelp enhancement
+
+10 MTS with wasting disease"
+5ee87eca-a6cc-4962-b9a1-f0d33ac2db8b,Reef Point,United States of America,48.536839,-122.718458,08/12/2024,08/12/2024,,,,,,,Cloudy,Low,12.8,12.8,,""
+6009e4c2-6a70-48a6-828c-75e52d2b5a4f,Ketron Island,United States of America,47.167661,-122.63057,08/31/2025,08/31/2025,,,false,false,false,false,Sunny,Low,16.11,13.89,,""
+60498585-119a-493e-b862-357fb7f5139d,Titlow Beach ,United States of America,47.246982,-122.555038,06/21/2025,07/03/2025,,,,,,,Sunny,Low,13.9,12.2,12.2,Wire Weed present
+60b56127-d780-4adf-aed6-b5ebcfe9b06c,Squaxin Island,United States of America,47.16767,-122.895667,07/07/2022,07/13/2022,,,,,,,"","",9.4,,,Conducted by WA DNR Geoduck Fishery Compliance Divers.
+60c9d7ff-ed63-4be6-89e1-b1682c0e3112,Derelict Conveyor,United States of America,48.855254,-122.730835,06/27/2025,06/28/2025,0.0,0.0,,,,,Sunny,Low,,12.2,,"Core 2 was redone due to low vis.
+Great Sculpin on transect 9 28cm"
+611918ac-ebc5-41cb-bcff-a592e74178ef,Devils Head,United States of America,47.166934,-122.761201,09/22/2024,09/22/2024,,,false,false,false,false,Sunny,Low,,13.9,,Spiny dogfish off transect
+61f982fe-6715-4957-acc5-ece468a53adc,Lowell Point,United States of America,48.11942,-122.48704,10/22/2023,10/22/2023,,,false,false,false,false,Cloudy,Low,15.0,13.9,13.9,Very few SFS unlike the dozens we saw last year.
+62eb9b90-8056-43ba-b053-8bb13612c88e,Reuben Tarte,United States of America,48.612837,-123.097222,09/15/2023,09/15/2023,,,false,false,false,false,Sunny,Low,12.2,12.2,12.2,Bull kelp present off transect 
+63750179-e0a7-45c9-91e4-c6dc53bed316,Possession Point,United States of America,47.90005,-122.383133,10/19/2023,10/19/2023,0.0,0.0,false,false,false,false,Cloudy,Low,12.8,12.8,,BK off transect on deep cores
+670cba71-04c9-42cd-8bdb-7ddcfd2f5627,Edmonds Shell Creek,United States of America,47.819549,-122.37838,07/30/2022,08/06/2022,,,false,false,false,false,Sunny,Low,15.5,13.8,,"
+"
+6a5012f4-30e3-48ea-a5cb-bd604644ae0c,Ketron Island,United States of America,47.167661,-122.63057,09/18/2022,09/18/2022,,,false,false,false,false,Sunny,Low,13.9,13.9,,""
+6e2231ac-9336-4ec9-8eb6-cba780a0f434,South Hat Island,United States of America,48.003363,-122.301536,10/28/2022,10/28/2022,,,false,false,false,false,Cloudy,Low,12.2,12.2,,""
+6f71ede0-37cc-4366-9a41-a06e4d91b6e7,Lowell Point,United States of America,48.11942,-122.48704,10/14/2021,10/17/2021,,,false,false,false,false,Rainy,Low,,,,""
+6fb6456e-d5da-4b95-a171-7726eeea4c78,Burrows Lighthouse,United States of America,48.477268,-122.714451,08/31/2022,09/15/2022,,,false,false,false,false,Cloudy,Low,11.0,11.0,11.0,""
+74438595-3903-4b81-86d3-54e6b0fc67b2,Pulali Point,United States of America,47.735708,-122.85479,07/12/2025,07/12/2025,,,false,false,false,false,Sunny,Low,22.2,13.9,12.2,6 Gill!
+7625f69e-ccdb-4284-b0da-491f9fe9fd11,Goby Gardens,United States of America,47.631907,-122.94162,06/29/2025,06/29/2025,,,false,false,false,false,Sunny,Low,17.8,12.2,10.0,""
+7835c150-3e9f-46a3-b090-532d3cfea0c2,Elliot Bay Marina,United States of America,47.627001,-122.391019,10/09/2024,10/09/2024,,,false,false,false,false,Cloudy,Low,15.5,12.2,12.2,Diver- ROV overlap as part of the HSIL project
+7a474e93-4f71-429a-8fe6-4a36bd2af43c,Dallas Banks,United States of America,48.133602,-122.934924,08/01/2025,08/01/2025,,,false,false,false,false,Sunny,Low,13.9,12.8,,About a dozen bull kelp on the surface
+7ae848d4-8a3b-4e31-b34c-6e3fbaf7e27b,Smallpox Bay,United States of America,48.541072,-123.161846,09/17/2023,09/17/2023,,,false,false,false,false,Sunny,Low,12.2,11.1,11.1,""
+7e1e0f47-ef91-4b02-94b4-bccc2f99690c,Burrows Lighthouse,United States of America,48.477268,-122.714451,08/27/2025,09/24/2025,,,false,false,false,false,Sunny,Low,17.2,15.0,,""
+806d49fb-dd08-47b2-9cee-e12774102163,McCurdy Point,United States of America,48.138791,-122.844791,07/08/2022,07/29/2022,,,false,false,false,false,Sunny,Low,12.2,12.2,12.0,Very Strong Current during last fish dives.
+80818b43-27a0-45e4-8ff0-ba8d9f98fee1,Point Vashon,United States of America,47.512553,-122.473981,07/18/2025,07/19/2025,0.0,0.0,false,false,false,false,Cloudy,Low,,13.89,13.89,High current on 7/18/2025. Spiny dog fish on ascent!
+8563d0b0-66c7-48cc-a759-d64b2d2df469,Magnolia,United States of America,47.631423,-122.401099,08/23/2023,09/08/2023,,,false,false,false,false,Sunny,Low,17.8,13.9,,"Cores Only. No fish transects completed on 8/23 - viz too poor; Dive 1: 2.2m, Dive 2: 1.7m "
+857f8457-a400-4bcd-9673-c54d036b63ff,Titlow Beach ,United States of America,47.246982,-122.555038,07/11/2024,07/29/2024,,,,,,,Sunny,Low,13.9,13.9,13.9,""
+866e81f4-1c40-4e85-88e7-01198cbf87e2,Edmonds Shell Creek,United States of America,47.819549,-122.37838,07/19/2021,07/19/2021,,,,,,,"","",,12.0,,"Cores Only, UPC #4-6 do not = 30
+UPC Cobble size range is 5-25cm
+All swaths were 1m wide. Subsampling distances were adjusted for this. "
+89b4d191-428f-4118-a178-4a8b60c0b52e,Watmough Bay,United States of America,48.431304,-122.803311,08/23/2023,08/24/2023,,,false,false,false,false,Cloudy,Low,13.9,13.9,,""
+89c988e8-7187-495e-b814-c4cc96c6b1f7,Squaxin Island,United States of America,47.16767,-122.895667,07/16/2024,07/17/2024,0.0,0.0,false,false,false,false,Sunny,Low,18.3,15.0,,"No Red/Purp Urchins seen
+Cores only"
+8fc93fe4-a441-47e5-8acb-d72f90741115,Lincoln Park,United States of America,47.536153,-122.397348,05/25/2024,05/25/2024,,,false,false,false,false,Cloudy,Low,,,,Variable viz across the site. Temp sensor missing.
+90593f51-7197-40e8-afac-cc2bf4b3bc8c,Smith Island,United States of America,48.318961,-122.849565,09/24/2023,09/24/2023,,,false,false,false,false,Cloudy,Low,12.8,12.2,11.1,""
+90b273d9-5bc4-4f27-9f2c-e81f8602f180,Point Caution,United States of America,48.563167,-123.025641,08/07/2022,10/08/2022,,,false,false,false,false,Sunny,Low,11.1,11.1,,""
+93525230-6a0a-4b8c-a96a-fa0c37a80de8,Point Vashon,United States of America,47.512553,-122.473981,07/23/2022,08/05/2022,,,false,false,false,false,Sunny,Low,12.0,11.0,,"QA: UPC5 miscount on cover. Verify I found 2 Brown holdfast. Depths are tide adjusted for fish, but UPC didn't have corrected values."
+93c4c8e4-f8a4-477f-a14f-604fa885b8c6,Watmough Bay,United States of America,48.431304,-122.803311,09/10/2024,09/11/2024,,,false,false,false,false,Cloudy,Low,,12.8,,""
+977eda6b-d085-45c3-84d2-9a76ac1b3257,Satellite Island,United States of America,48.684762,-123.191924,12/05/2024,12/05/2024,,,,,,,Cloudy,Low,,8.9,8.9,ROV/diver overlap 
+9b0ece72-d5c7-4f83-b755-f20c62edce0a,Owen Beach,United States of America,47.31752,-122.53389,06/30/2025,07/31/2025,,,,,,,Sunny,Low,14.4,12.8,10.0,Total Dives - 13
+9c27a3ea-17ad-4b7f-a0d2-bc47e5a076cd,Point Whitehorn,United States of America,48.896331,-122.795095,07/17/2022,08/23/2022,,,,,,,Cloudy,Low,17.0,12.0,,""
+9c299d78-a4a4-4118-a5ab-aa9df600a43c,Green Point,United States of America,48.118525,-123.315716,08/16/2025,08/16/2025,,,false,false,false,false,Cloudy,Low,10.56,10.56,9.44,1 Bull kelp at GP2 on surface
+9dbcf8b8-b14b-45fc-b9d7-53ce25d2c85e,Smith Island,United States of America,48.318961,-122.849565,08/01/2025,08/01/2025,,,false,false,false,false,Sunny,Medium,13.89,12.78,12.22,"Sea otter!
+Missing 2 fish transects "
+9eae5cb0-d23c-4ca8-ae26-662743ec298a,Derelict Conveyor,United States of America,48.855254,-122.730835,06/29/2024,06/29/2024,,,false,false,false,false,Cloudy,Low,13.9,12.2,,Note from Kelp 2: all bull kelp present on transect was under 30 cm
+9ee90455-18f3-4910-a9e3-f63903e036fa,Cattle Point,United States of America,48.45148,-122.961402,09/14/2024,09/14/2024,,,false,false,false,false,Sunny,Low,,10.6,,Could only do 4 transects due to strong current
+9f0ced32-a3ef-4609-bf74-c9867394c7b3,Foulweather Bluff,"",47.941083,-122.6012,08/31/2022,09/19/2022,,,false,false,false,false,Sunny,Low,,12.2,,Big currents on 8/31
+9f268a09-7844-4790-916d-c87bd512a03a,Sekiu Point,United States of America,48.267782,-124.297828,08/03/2024,08/04/2024,,,false,false,false,false,Cloudy,Low,11.1,11.1,10.0,""
+a02ff7dc-b000-44aa-98b0-6035e3a58ed6,Point Caution,United States of America,48.563167,-123.025641,06/28/2023,07/27/2023,,,false,false,false,false,Cloudy,Low,10.0,10.0,,""
+a18097c9-0544-496a-acc3-63b5a6fead09,Squaxin Island,United States of America,47.16767,-122.895667,07/11/2023,07/12/2023,,,,,,,Sunny,Low,24.4,14.4,,Cores Only
+a1c897df-e4d4-41fc-8696-79a1a0939ea7,Point Dalco,United States of America,47.333519,-122.519126,07/20/2025,07/20/2025,,,false,false,false,false,Cloudy,Low,13.9,12.8,12.8,""
+a2153762-745e-49ea-93dc-4a137ac16026,Pulali Point,United States of America,47.735708,-122.85479,08/28/2022,08/28/2022,,,false,false,false,false,Sunny,Low,15.6,12.2,11.1,""
+a9421528-221a-4393-a9be-a61ee52dffba,North Beach,United States of America,48.144779,-122.778533,07/04/2025,07/04/2025,,,false,false,false,false,Sunny,Low,11.1,11.1,10.0,""
+aa65d761-113d-4363-8032-1dc973a6b603,Ketron Island,United States of America,47.167661,-122.63057,08/25/2024,08/25/2024,,,false,false,false,false,Cloudy,Low,13.9,13.3,12.8,""
+ab2da727-c6be-4aa5-ae6a-0a481d5546f3,South Hat Island,United States of America,48.003363,-122.301536,10/10/2024,10/10/2024,,,,,,,Cloudy,Low,,12.8,,YQBC off transect
+ac5d1541-8c46-4de4-a1c9-61654f6fa578,Edmonds Shell Creek,United States of America,47.819549,-122.37838,07/06/2024,07/06/2024,,,false,false,false,false,Sunny,Low,13.9,13.3,,""
+ac7a82e8-bc4c-437a-9af7-50f0d6867930,Seattle Waterfront,United States of America,47.608873,-122.349157,08/26/2024,08/28/2024,,,false,false,false,false,Rainy,Low,16.0,12.0,,"Cores Only; Core 1 & 2 Olympic Sculpture Park, Core 3 & 4 AQ Extended Bench, Core 5 & 6 Colman Beach "
+adcd3dd7-1d03-44c6-b29d-9bbf515b00d3,Freshwater Bay,United States of America,48.141606,-123.613191,07/25/2023,07/26/2023,,,false,false,false,false,Sunny,Low,11.1,10.0,8.9,""
+aea2bd61-7524-4158-9718-4c80ddc5d140,Clallam Bay West,United States of America,48.256822,-124.275318,08/03/2024,08/03/2024,0.0,0.0,false,false,false,false,Cloudy,Medium,12.2,11.1,,""
+afe03a3b-2b28-41b3-9fae-82aadc759d47,Lawrence Point,United States of America,48.66048,-122.741701,09/18/2023,09/19/2023,,,false,,false,false,Sunny,Low,10.6,10.0,10.0,""
+b116f4b8-2085-4d54-a31f-3b3336ffdd03,Freshwater Bay,United States of America,48.141606,-123.613191,08/04/2025,08/05/2025,,,false,false,false,false,Cloudy,Medium,12.78,10.0,8.89,""
+b3756406-521f-437b-84bc-eab378d6b059,Blake Island South,United States of America,47.53049,-122.49498,07/18/2025,07/18/2025,,,false,false,false,false,Cloudy,Low,13.9,12.8,12.8,""
+b405fcb0-360f-44b5-b2ea-eed974c26177,Ebeys Landing,United States of America,48.18384,-122.7004,05/27/2023,05/28/2023,,,false,false,false,false,Cloudy,Medium,11.1,11.1,10.0,FGF identified as Pacific Cod
+b4427b38-93f0-4291-9290-ef1350695e80,Ebeys Landing,United States of America,48.18384,-122.7004,08/18/2022,08/19/2022,0.0,0.0,false,false,false,false,Sunny,Low,12.7,12.2,12.2,""
+b498896b-59d8-4189-8de8-538abca98247,Sund Rock,United States of America,47.435996,-123.12022,06/13/2025,06/13/2025,,,false,false,false,false,Cloudy,Low,16.1,12.2,10.6,Poor vis down to 60'
+b5f041ee-1115-4611-aaad-1b05fa878070,McCurdy Point,United States of America,48.138791,-122.844791,07/22/2023,07/22/2023,,,false,false,false,false,Cloudy,Low,13.3,10.6,10.6,""
+b6507e9c-0333-4cfb-a353-89c0e868ae59,Magnolia,United States of America,47.631423,-122.401099,07/08/2025,08/14/2025,,,false,false,false,false,Sunny,Low,17.8,13.9,,No fish 7/8
+b70346e0-d4f3-4bad-b96a-6dfdf7c38d8b,Reuben Tarte,United States of America,48.612837,-123.097222,09/23/2022,09/23/2022,,,false,false,false,false,Cloudy,Low,12.2,11.1,10.0,""
+b7599239-5b44-40c9-ac3c-92cb4f584d5e,Burrows Lighthouse,United States of America,48.477268,-122.714451,09/09/2024,09/09/2024,,,false,,false,false,Cloudy,Low,13.9,11.1,11.1,""
+b8530df0-2f8f-413e-8f84-3bab5cec38ec,Sekiu Point,United States of America,48.267782,-124.297828,07/28/2023,07/28/2023,,,false,false,false,false,Sunny,Low,22.2,11.1,9.4,""
+b8b6a98e-de4b-4ed4-9937-31d21746dd7a,Salmon Beach,United States of America,47.296017,-122.53165,08/20/2025,09/30/2025,0.0,0.0,false,false,false,false,Sunny,Low,16.7,15.0,13.3,Cores only. Survey completion delayed by wildfire response.
+b9231329-b02e-40c1-8e52-f9b80c54a6c1,Lower Elwha,United States of America,48.13964,-123.585069,08/17/2025,08/17/2025,,,false,false,false,false,Cloudy,Low,10.6,9.4,7.2,""
+b9cea5ea-4f30-4c3f-bfae-3e897d5753dd,Point Whitehorn,United States of America,48.896331,-122.795095,06/27/2025,06/28/2025,,,false,false,false,false,Cloudy,Low,,10.6,,Very low PM tides. 
+bac788c0-b113-431c-b179-fb48b9a8a866,Dallas Banks,United States of America,48.133602,-122.934924,07/21/2023,07/22/2023,,,false,false,false,false,Sunny,Low,15.0,11.1,,Fog on dive 2
+bb3f23f0-c2aa-4e24-9811-f649758ec852,Freshwater Bay,United States of America,48.141606,-123.613191,07/17/2024,07/18/2024,,,false,false,false,false,Cloudy,Low,13.3,,,"Temp variation from areas w/ dense kelp to areas w/ minimal kelp.
+7/17, 26 ft @ 48℉
+7/18,  surface @ 56℉, ~5m @ 49-53℉"
+bc5a5fb4-c5b6-41ac-aceb-c5cf981f1211,Burrows Lighthouse,United States of America,48.477268,-122.714451,09/05/2023,09/05/2023,,,false,false,false,false,Sunny,Low,12.8,12.2,12.2,1 green palid urchin seen with black spot disease
+c02b74b7-84f7-4df8-8626-7ff5a02ffd93,Grain Terminal ,United States of America,47.624131,-122.369154,07/16/2025,08/14/2025,,,false,false,false,false,Sunny,Low,,,11.7,"""vis too poor for fish 7/16"""
+c05f5a49-f7b5-4ca2-a7a4-d36026d63f43,Sirens of Spring ,United States of America,47.618148,-122.360893,10/08/2024,10/08/2024,,,false,false,false,false,Cloudy,Low,15.6,12.2,12.2,"Diver- ROV overlap as part of HSIL project
+"
+c0bc469a-833f-429e-92d5-f2e01edbc691,Fox Island East Wall,United States of America,47.228194,-122.589757,08/31/2025,09/18/2025,,,false,false,false,false,Sunny,Low,15.0,13.9,,""
+c2b3c120-c9d2-4f7b-b7ce-71298e491c85,Wing Point,United States of America,47.615814,-122.488302,07/20/2023,07/20/2023,,,,,,,Sunny,Low,15.0,13.9,,"Viz too poor to complete remaining fish transects, unable to return to site to finish either. Very shallow transects."
+c5adddab-6162-487c-9056-63de22942a98,Reef Point,United States of America,48.536839,-122.718458,09/12/2025,09/12/2025,,,false,false,false,false,Cloudy,Low,11.11,11.11,,""
+c66ef1ed-b535-4ab6-937f-6c7f97be4118,Partridge Point,United States of America,48.225837,-122.771572,06/10/2022,06/11/2022,,,,,,,Cloudy,Low,11.0,10.0,,""
+c6a5e84e-bd35-4090-bac3-4f34a17eee31,Eagle Cove ,United States of America,48.459734,-123.033258,09/16/2023,09/16/2023,,,false,false,false,false,Cloudy,Low,12.2,11.1,11.1,""
+c99af2f0-3959-478b-9add-575c290d0037,Teahwhit Head,United States of America,47.87103,-124.60768,08/06/2024,08/06/2024,,,false,false,false,false,Cloudy,Medium,15.0,15.0,13.9,"Transect 1, 2, and 3 = no kelp found."
+ca3ff923-140b-4e75-b828-1ff480b608b1,Salmon Beach,United States of America,47.296017,-122.53165,08/08/2023,08/24/2023,,,false,false,false,false,Cloudy,Low,12.2,11.1,,Cores only no FOT
+cc230e16-e890-4416-8e67-455df1b9ccc5,Devils Head,United States of America,47.166934,-122.761201,09/17/2022,09/17/2022,,,false,false,false,false,Sunny,Low,,13.3,13.3,""
+cc52d6ce-8725-4946-914d-f59d917a4325,Sirens of Spring ,United States of America,47.618148,-122.360893,01/27/2025,01/27/2025,,,false,false,false,false,Sunny,Low,,,8.9,"Viz about 10 feet. ROV/Diver Overlap
+"
+cd3a5dd7-56d4-4c7f-982b-d1116a090162,Point Vashon,United States of America,47.512553,-122.473981,07/12/2024,07/12/2024,,,,,,,Sunny,Low,13.9,12.8,,""
+cd67ec29-4ace-46d7-83cd-27d7fb58271b,Lincoln Park,United States of America,47.536153,-122.397348,06/12/2023,06/27/2023,,,false,false,false,false,Sunny,Low,11.1,11.1,,Viz 1.5m on 6/20 - no fish counted
+cf31ac69-24ba-440f-a098-a67547cf1343,Fox Island East Wall,United States of America,47.228194,-122.589757,08/27/2023,08/27/2023,,,false,,false,false,Sunny,Low,17.0,16.0,14.0,Some current during surveys; slack approximately 1 hr before low tide
+d0742feb-f12a-44ee-861a-d97fd3ba3ba2,Eagle Cove ,United States of America,48.459734,-123.033258,09/27/2025,09/27/2025,,,false,false,false,false,Sunny,Low,11.11,11.11,10.56,""
+d1fcacf5-5974-4f1f-b92a-f3fe0fbff39b,Seattle Waterfront,United States of America,47.608873,-122.349157,08/22/2025,08/27/2025,,,false,false,false,false,Sunny,Low,,,,Cores only
+d31e21f2-bc76-4099-99d3-3de54ed918b8,Eagle Cove ,United States of America,48.459734,-123.033258,09/14/2024,09/14/2024,,,,,true,,Rainy,Low,,,11.11,""
+d39682e2-e1d9-4f4f-aecb-d8578a99b42c,Freshwater Bay,United States of America,48.141606,-123.613191,08/18/2022,08/19/2022,,,false,false,false,false,Sunny,Low,10.0,8.9,8.9,Transect 5: Pinto abalone on transect 12- 16cm @ 26 feet
+d55dc988-70c6-4ea1-810a-6877eb07b2fd,Jefferson Head,United States of America,47.744509,-122.475293,07/20/2022,07/21/2022,,,false,false,false,false,Sunny,Low,13.0,,,PSRF kelp enhancement site
+d6248c74-bad1-4d60-8b6f-7962909e8f5d,Sund Rock,United States of America,47.435996,-123.12022,09/17/2022,09/17/2022,,,false,false,false,false,Cloudy,Low,16.0,13.0,8.0,"Kelp 3 and 4 has the notes ""From 30"". I entered the dist assuming they did NOT do the math. 30 - 18.8 = 11.2 for example. I added a comment asking to confirm this is the case.
+Fish 6 has a note STP (12)2 but then entered 12 in the column. Asked clarification.. did they mean 2 that were 12cm in size? Just asked to make sure."
+d6c66705-7d07-48d3-bb7d-6f3838d0442c,Deadmans Bay,United States of America,48.512846,-123.147129,09/26/2025,09/26/2025,,,false,false,false,false,Cloudy,Low,10.56,10.56,10.0,Onshore wind 15 kts
+d7ca3840-3dd9-405a-9192-7db10c86ccce,Elliot Bay Marina,United States of America,47.627001,-122.391019,08/28/2025,08/28/2025,,,false,false,false,false,Sunny,Low,,,12.8,ROV/diver overlap
+d7d7f9ef-230e-451a-835b-d8017ea0749b,Jefferson Head,United States of America,47.744509,-122.475293,07/08/2025,07/17/2025,,,false,false,false,false,Sunny,Low,15.56,13.89,,No fish 7/8
+d7e2f58c-23cd-4b34-99cc-b1b85634da0b,Squaxin Island,United States of America,47.16767,-122.895667,07/07/2021,07/08/2021,,,false,false,false,false,Cloudy,Low,,9.4,,"Cores only; UPC Cobble size range is 5-25cm; All
+swaths were 1m wide. Subsampling distances were
+adjusted for this."
+d90f23dc-1c8e-48fb-8cd5-b249075cae70,Titlow Beach ,United States of America,47.246982,-122.555038,07/23/2023,08/27/2023,,,,,,,Sunny,Low,15.0,13.9,13.9,"Beach closed for fecal contamination 7/24-8/18/2023
+Woody Kelp present but too small to count."
+d99e3af5-6744-4767-9e77-4925f57b4d6e,Foulweather Bluff,"",47.941083,-122.6012,08/09/2023,08/22/2023,,,,,,,Cloudy,Low,12.8,11.1,10.6,""
+da7d7245-629d-45d0-bd09-12e213ec3cc4,Watmough Bay,United States of America,48.431304,-122.803311,09/11/2025,09/29/2025,,,false,false,false,false,Rainy,Low,,,10.0,""
+dc0070b0-2770-49f9-a08b-4db7e5990079,Lowell Point,United States of America,48.11942,-122.48704,10/22/2022,10/22/2022,,,false,false,false,false,Rainy,Low,12.2,12.2,,""
+dcb72a90-ef74-414a-8845-370c567a7186,Foulweather Bluff,"",47.941083,-122.6012,09/25/2025,09/25/2025,,,false,false,false,false,Sunny,Low,12.78,11.11,11.11,"Current picked up significantly at the end, so Transect 1 was not completed"
+debcfec7-7501-4778-ab53-af8ce723be6b,Satellite Island,United States of America,48.684762,-123.191924,09/26/2025,09/26/2025,,,,,,,Sunny,Low,,,12.2,viz ~ 15ft ROV/diver overlap
+dfb4e079-8b7e-4bdc-9e1e-ff97330d41ac,Saltwater State Park,United States of America,47.373282,-122.327981,08/17/2024,08/17/2024,,,,,,,Sunny,Low,15.0,15.0,12.8,"Off transect 6 gill, medium shallow  current"
+e050e79b-96b0-4594-b6c6-a10058711cd6,Seattle Waterfront,United States of America,47.608873,-122.349157,09/19/2023,09/22/2023,,,false,false,false,false,Cloudy,Low,,,,"Core 1 & 2 Olympic Sculpture Park, Core 3 & 4 AQ Extended Bench, Core 5 & 6 Colman Beach"
+e05922fa-9f25-47e8-b802-06d8507b91fb,Saltwater State Park,United States of America,47.373282,-122.327981,08/17/2025,08/17/2025,,,false,false,false,false,Cloudy,Low,15.0,13.89,12.78,""
+e48644ad-7ddf-4eeb-b749-ea795c5b753a,Green Point,United States of America,48.118525,-123.315716,08/04/2023,08/04/2023,,,false,false,false,false,Sunny,Low,11.6,10.6,10.6,"Cores only
+"
+e4e55610-c720-4f9e-a314-ad45f4e20cc4,Seattle Waterfront,United States of America,47.608873,-122.349157,06/23/2022,10/06/2022,,,false,false,false,false,Sunny,Low,,,,"Seattle Waterfront is composed of 3 sites AQ Ex Bench (47.60819, -122.34385),
+Olympic Sculpture Park (47.61625, -122.35754), Colman (47.60111, -122.3368)
+Transects 1 & 2 are Olympic Sculpture Park, Transects 3 & 4 are Colman & Transects 5 & 6 are AQ Extended Bench. 
+"
+e7d9d900-0998-42c7-82e4-48112040db7d,Deadmans Bay,United States of America,48.512846,-123.147129,09/24/2022,09/24/2022,,,false,false,false,false,Sunny,Low,12.2,11.1,11.1,""
+e9dcc1c3-4d5f-4924-acc9-ba64e093e107,Point Whitehorn,United States of America,48.896331,-122.795095,06/28/2024,06/29/2024,,,false,false,false,false,Sunny,Low,13.9,12.2,11.1,A lot of undersized bull kelp on deep transects.
+ea156479-30fe-4a09-ac08-bc75fd2f3ec6,Smallpox Bay,United States of America,48.541072,-123.161846,09/15/2024,09/15/2024,,,false,false,false,false,Sunny,Low,,,10.0,"Black spot observed on deceased urchin tests. Observation recorded on Invert 1
+"
+eaabdd70-3713-42a3-8afd-7277dea0ac4a,Partridge Point,United States of America,48.225837,-122.771572,06/02/2024,06/30/2024,,,false,false,false,false,Cloudy,Medium,12.8,11.1,9.4,""
+eb9d0091-a0ec-4f5b-8ab0-7090d6f4611b,Wing Point,United States of America,47.615814,-122.488302,08/15/2024,08/15/2024,,,false,false,false,false,Cloudy,Low,18.9,15.0,,""
+ebb7b095-edfe-488f-86cb-6c5751b3adb5,Clallam Bay West,United States of America,48.256822,-124.275318,07/28/2023,07/29/2023,,1.0,false,true,false,false,Sunny,Medium,12.2,12.2,,Areas had vis 1.8m on 7/29. Only 14 fish transects complete
+ec463112-7932-458f-b3d5-a55b956c03b6,Grain Terminal ,United States of America,47.624131,-122.369154,07/08/2024,09/05/2024,,,false,false,false,false,Sunny,Low,20.0,11.7,,"""Viz: 1.7m - 1.9m 07/08"" and ""Viz 4.8m 09/05"""
+ee119977-1feb-4d69-9340-10afc0ce34c4,North Beach,United States of America,48.144779,-122.778533,06/14/2024,06/15/2024,,,false,false,false,false,Rainy,Low,12.8,12.2,11.1,""
+ee8aedc9-c9e1-4519-b042-11ac4498b0e9,Lawrence Point,United States of America,48.66048,-122.741701,08/28/2025,08/28/2025,,,false,false,false,false,Sunny,Low,12.2,12.2,,""
+eeb2863b-40d4-4929-ad34-010ff962766d,South Shaw Island,United States of America,48.548389,-122.953611,12/03/2024,12/03/2024,,,,,,,Sunny,Low,,,8.9,viz ~15ft. Diver/ROV overlap
+eeb42025-b0f2-417f-982b-3df7b0f8a60c,Goby Gardens,United States of America,47.631907,-122.94162,08/27/2022,08/27/2022,,,false,false,false,false,Cloudy,Low,15.6,11.7,10.6,""
+ef054e0e-d579-44fe-995a-e6632e3e6faf,Partridge Point,United States of America,48.225837,-122.771572,06/21/2025,06/22/2025,0.0,0.0,false,false,false,false,Rainy,Medium,12.2,11.1,,Poor vis and swell. No FOT completed. 
+ef14b7d5-fcbc-4375-a083-5873b3f123f7,Glen Acres,United States of America,47.48005,-122.448455,07/19/2025,07/19/2025,,,false,false,false,false,Sunny,Low,12.78,12.78,12.22,""
+f24eeb01-81f6-417b-ad29-b9cbd2daa8cb,Clallam Bay West,United States of America,48.256822,-124.275318,08/09/2025,08/09/2025,,,false,false,false,false,Cloudy,Low,11.11,10.0,,""
+f34c35b4-372f-4638-bffb-45b2c4c3d44e,Owen Beach,United States of America,47.31752,-122.53389,07/10/2023,07/27/2023,,,,,,,Sunny,Low,,11.7,12.7,""
+f5fc1e42-d049-42bb-aa1a-528ea9124a3b,Devils Head,United States of America,47.166934,-122.761201,08/25/2023,08/25/2023,,,false,false,false,false,Sunny,Low,17.2,16.1,15.0,""
+f6ee9a65-b55c-4b02-bc6b-1b2d4448e4c4,Magnolia,United States of America,47.631423,-122.401099,08/17/2021,08/17/2021,,,,,,,Cloudy,Low,,13.0,,"Cores Only, UPC Relief#1, 4, 6 & UPC Relief & Cover # 3 do not equal 30. 
+Cobble size range (5cm-25cm). Sampling distances adjusted for 1m swaths. "
+f87a607d-90a8-4087-8d0c-e84674434889,Wing Point,United States of America,47.615814,-122.488302,08/18/2021,08/18/2021,,,,,,,Sunny,Low,,13.9,,"Cores Only; Inability to enter negative depths (Fish 1-3); UPC Cobble size range is 5-25cm; All swaths were 1m wide. Subsampling distances were adjusted for this.
+"
+f8fb7c65-def3-42f9-92bf-9198b5016795,Wing Point,United States of America,47.615814,-122.488302,09/14/2022,09/16/2022,,,false,false,false,false,Cloudy,Medium,13.9,,12.8,""
+f9403d3b-da25-4f57-bc1a-79e441338ab6,Reuben Tarte,United States of America,48.612837,-123.097222,09/13/2024,09/13/2024,,,,,,,Rainy,Low,,12.2,12.2,""
+f9d7d991-cd9c-45cb-85b2-3600125de7aa,Elliot Bay Marina,United States of America,47.627001,-122.391019,01/28/2025,01/28/2025,,,,,,,Sunny,Low,,,8.9,"Viz ~30ft, ROV/Diver overlap"
+fba96ada-3bb1-42a6-ab13-da74d84b1179,Glen Acres,United States of America,47.48005,-122.448455,07/08/2023,07/28/2023,,,false,false,false,false,Cloudy,Low,12.2,12.2,,""
+fbd133a3-de91-4cd9-ba39-c930c9c9c79a,Dallas Banks,United States of America,48.133602,-122.934924,06/16/2024,06/16/2024,,,false,false,false,false,Cloudy,Low,12.2,11.1,,""
