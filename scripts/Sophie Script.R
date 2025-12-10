@@ -18,13 +18,24 @@
 
 
 #####Kelp#####
-install.packages("ggplot2")
-library(ggplot2)
+install.packages("dplyr")
+library(dplyr)
 library(readr)
 Kelp <- read_csv("data/Kelp.csv")
 
-#remove everything not needed#
+##remove everything not needed##
+#remove variables#
 Kelp_clean<-subset(Kelp, select = -c(survey_id, site_country, latitude, longitude, region, stipes, observer, date_start, date_end))
+
+#select date range#
+Kelp_clean$start_at<- as.Date(Kelp_clean$start_at, format = "%m/%d/%Y" )
+Kelp_clean<- Kelp_clean %>%
+  filter(start_at>=as.Date("2024-01-01"),
+         start_at<=as.Date("2025-12-30"))
+#select sites#
+Kelp_clean<-Kelp_clean %>%
+  filter(site_name %in% c("Magnolia","Grain Terminal","Freshwater Bay","Jefferson Head","Blake Island South","Seattle Waterfront","Wing Point"))
+
 View(Kelp_clean)
 
 #add density column#
