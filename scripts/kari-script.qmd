@@ -8,6 +8,314 @@ editor: visual
 
 This is a note for making the grey code section: ctrl + alt + i for this command!
 
-```{r}
+Packages to install for this project:
 
+```{r}
+install.packages("tidyverse")
+install.packages("ggplot2")
+install.packages("readr")
+install.packages("dplyr")
+install.packages("scales")
+install.packages("lubridate")
+install.packages("stringr")
+install.packages("ggpattern")
+library("tidyverse")
+library("ggplot2")
+library("readr")
+library("dplyr")
+library("scales")
+library("lubridate")
+library("stringr")
+library("ggpattern")
+```
+
+Pulling in the Reef Check data from 2024 and merging to 2025 + removing columns/rows that I don't want to keep - data clean-up
+
+```{r}
+inverts_raw <- Inverts
+
+#removing columns
+inverts_clean <- inverts_raw %>% 
+  select(site_name, date_start, date_end, transect, species, amount, distance)
+
+#filtering rows that I want (site comparisons)
+inverts_comparison_sites <- inverts_clean %>% 
+  filter(site_name %in% c("Blake Island South", "Grain Terminal", "Freshwater Bay", "Magnolia", "Seattle Waterfront", "Wing Point"))
+
+#updating the date column format and adding a year column
+inverts_comparison_sites$date_start <- mdy(inverts_comparison_sites$date_start)
+inverts_comparison_sites$date_end <- mdy(inverts_comparison_sites$date_end)
+inverts_comparison_sites <- inverts_comparison_sites %>% 
+  mutate(Year = year(date_start))
+
+#mutating transect numbers to deep or shallow
+inverts_comparison_sites <- inverts_comparison_sites %>% 
+  mutate(depth_strata = ifelse(transect %in% c(1, 2, 3), "Deep",
+                              ifelse(transect %in% c(4,5,6), "Shallow", NA)))
+
+#changing Grain Terminal site name to Centennial Park in Site column
+inverts_comparison_sites <- inverts_comparison_sites %>% 
+  mutate(site_name = ifelse(site_name == "Grain Terminal", "Centennial Park", site_name))
+```
+
+Comparing 2024 and 2025 inverts in the dataframe and completing the table with all transects being complete
+
+```{r}
+#filtering out the years for comparison
+yearly_comparison <- inverts_comparison_sites %>% 
+  filter(site_name == "Centennial Park",
+         Year %in% c(2024, 2025))
+
+#adding in the missing zeros to the data, so each transect/species has three values to calculate the SD from
+
+#creating the full table with all the missing pieces 
+all_species <- unique(yearly_comparison$species)
+all_years <- unique(yearly_comparison$Year)
+
+transect_grid <- expand.grid(
+  species = all_species,
+  Year = all_years,
+  depth_strata = c("Deep", "Shallow"),
+  transect = 1:6
+)
+
+#filtering transect numbers by depth
+transect_grid <- transect_grid %>% 
+  mutate(
+    transect = case_when(
+      depth_strata == "Deep" & transect %in% 1:3 ~ transect,
+      depth_strata == "Shallow" & transect %in% 4:6 ~ transect,
+      TRUE ~ NA_real_)) %>% 
+  filter(!is.na(transect))
+
+#merging the data with the "mising data" <- fill in the blanks so all transects have all species, even if ZERO were observed for a transect
+yearly_comparison_clean <- transect_grid %>% 
+  left_join(yearly_comparison, by = c("species", "Year", "depth_strata", "transect")) %>% 
+  mutate(amount = ifelse(is.na(amount), 0, amount))
+
+```
+
+Calculating the density and SD (from original amount) for each invertebrate and adding to the same dataframe
+
+```{r}
+#calculating SD and Density (per depth strata, hence the 180)
+compiled_yearly_comparison <- yearly_comparison_clean %>%    
+  group_by(species, depth_strata, Year) %>% 
+  summarise(
+    total_amount = sum(amount),
+    SD = sd(amount),
+    density = total_amount / 180)
+
+```
+
+Plotting inverts side-by-side for strata and including 2024 & 2025 data!
+
+```{r}
+ggplot(compiled_yearly_comparison, 
+       aes(x=species, y=density, 
+           fill=factor(Year), 
+           pattern = depth_strata)) + 
+  geom_bar_pattern(
+    stat= "identity",
+    position = position_dodge2(width = 0.9, padding = 0.1, preserve = "single"),
+    color = "black",
+    width = 0.7,
+    pattern_fill = "black",
+    pattern_density = 0.2,
+    pattern_spacing = 0.02,
+    pattern_angle = 45) +
+  geom_errorbar(
+    aes(ymin = pmax(density-SD,0), ymax =density+SD, 
+                group = interaction(depth_strata, Year)),
+    position = position_dodge2(width=0.9, padding = 0.1, preserve = "single"),
+    width = 0.2) +
+  scale_fill_manual(values=c("2024" = "#EC7014", "2025" = "#FEC44F")) +
+  scale_pattern_manual(values = c("Deep" = "stripe", "Shallow" = "none")) +
+  ylab(bquote(Density (m^-2))) +
+  theme_minimal() +
+  theme(panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        panel.grid.major.x = element_line(color="gray"),
+        panel.grid.minor.x = element_blank(),
+        panel.border = element_rect(color="black",
+                                  fill=NA,
+                                  size = 1),
+        legend.position = c(0.98,0.02),
+        legend.justification = c(1,0),
+        legend.background = element_rect(fill = "white", color = NA),
+        legend.margin = margin(4,4,4,4),
+        # Increase legend text and key size
+        legend.text = element_text(size = 10),          # Larger legend text
+        legend.title = element_text(size = 11),         # Larger legend title
+        legend.key.size = unit(1, "lines"),           # Larger legend keys
+        legend.key.height = unit(0.8, "lines"),         # Adjust the height of legend keys (if necessary)
+        legend.key.width = unit(1, "lines"),
+        axis.title.x = element_text(size = 12),         # Larger x-axis label
+        axis.title.y = element_text(size = 12),         # Larger y-axis label
+        axis.text.x = element_text(size = 10),  # Larger x-axis tick labels
+        axis.text.y = element_text(lineheight = 0.8, size = 10)) +       # Larger y-axis tick labels)
+  labs(x="Species", y="Density (m^2)") +
+  guides(fill = guide_legend(title = "Year", order = 1,
+                             override.aes = (list(
+                               pattern = "none",
+                               pattern_Density = 0,
+                               pattern_fill = NA,
+                               pattern_Spacing = 0,
+                               pattern_angle = 0,
+                               color = "black"))),
+       pattern = guide_legend(title = "Depth Strata", order = 2,
+                              override.aes = list(
+                                fill = "white",
+                                color = "black"
+                              ))) +
+  scale_y_continuous(expand=c(0,0),limits = c(0,0.8), breaks=seq(0,.8,by=0.2)) +
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14),
+                   expand = expansion(add = 0.3)) +
+  coord_cartesian(ylim = c(0, max(compiled_yearly_comparison$density + compiled_yearly_comparison$SD) * 1.1))  #so error bars don't go below 0
+  coord_flip()
+
+
+#without mottled star
+compiled_yearly_comparisonFILTERED <- compiled_yearly_comparison %>% 
+  filter(!species %in% c("Mottled Star"))
+
+#splitting species into two groups so the plot is easier to visualize
+compiled_yearly_comparison$size_category <- ifelse(compiled_yearly_comparison$density > 0.1, "Large", "Small")
+
+ ggplot(compiled_yearly_comparison, 
+       aes(x=species, y=density, 
+           fill=factor(Year), 
+           pattern = depth_strata)) + 
+  geom_bar_pattern(
+    stat= "identity",
+    position = position_dodge2(width = 0.9, padding = 0.15, preserve = "single"),
+    color = "black",
+    width = 0.85,
+    pattern_fill = "black",
+    pattern_density = 0.35,
+    pattern_spacing = 0.02,
+    pattern_angle = 45) +
+  #geom_errorbar(
+    #aes(ymin = pmax(density-SD,0), ymax =density+SD, 
+                #group = interaction(Year, depth_strata)),
+    #position = position_dodge2(width=0.9, padding = 0.15, preserve = "single"),
+    #width = 0.2) +
+  scale_fill_manual(values=c("2024" = "#EC7014", "2025" = "#FEC44F")) +
+  scale_pattern_manual(values = c("Deep" = "stripe", "Shallow" = "none")) +
+  ylab(bquote(Density (m^-2))) +
+  theme_minimal() +
+  theme(panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        panel.grid.major.x = element_line(color="gray"),
+        panel.grid.minor.x = element_blank(),
+        panel.border = element_rect(color="black",
+                                  fill=NA,
+                                  size = 1),
+        legend.position = c(0.98,0.02),
+        legend.justification = c(1,0),
+        legend.background = element_rect(fill = "white", color = NA),
+        legend.margin = margin(4,4,4,4),
+        # Increase legend text and key size
+        legend.text = element_text(size = 10),          # Larger legend text
+        legend.title = element_text(size = 11),         # Larger legend title
+        legend.key.size = unit(1, "lines"),           # Larger legend keys
+        legend.key.height = unit(0.8, "lines"),         # Adjust the height of legend keys (if necessary)
+        legend.key.width = unit(1, "lines"),
+        axis.title.x = element_text(size = 12),         # Larger x-axis label
+        axis.title.y = element_text(size = 12),         # Larger y-axis label
+        axis.text.x = element_text(size = 10),  # Larger x-axis tick labels
+        axis.text.y = element_text(lineheight = 0.8, size = 10)) +       # Larger y-axis tick labels)
+  labs(x="Species", y="Density (m^2)") +
+  guides(fill = guide_legend(title = "Year", order = 1,
+                             override.aes = (list(
+                               pattern = "none",
+                               pattern_Density = 0,
+                               pattern_fill = NA,
+                               pattern_Spacing = 0,
+                               pattern_angle = 0,
+                               color = "black"))),
+       pattern = guide_legend(title = "Depth Strata", order = 2,
+                              override.aes = list(
+                                fill = "white",
+                                color = "black"
+                              ))) +
+   facet_wrap(~size_category, scales = "free_x", ncol = 1) +
+   scale_y_continuous(expand=c(0,0),limits = c(0,0.8), breaks=seq(0,.8,by=0.1)) +
+   #scale_x_discrete(labels = function(x) str_wrap(x, width = 12),
+                   #expand = expansion(add = 0.6)) +
+   coord_flip()
+ 
+ 
+ #############################################################
+ install.packages("pachwork")
+ library(patchwork)
+
+# Create plot for small values
+plot_small_values <- ggplot(compiled_yearly_comparison[compiled_yearly_comparison$density <= 0.10, ], 
+                           aes(x = species, y = density, fill = factor(Year), pattern = depth_strata)) + 
+  geom_bar_pattern(
+    stat = "identity",
+    position = position_dodge2(width = 0.9, padding = 0.15, preserve = "single"),
+    color = "black",
+    width = 0.85,
+    pattern_fill = "black",
+    pattern_density = 0.35,
+    pattern_spacing = 0.02,
+    pattern_angle = 45) +
+  #geom_errorbar(
+    #aes(ymin = pmax(density - SD, 0), ymax = density + SD, 
+        #group = interaction(Year, depth_strata)),
+    #position = position_dodge2(width=0.9, padding = 0.15, preserve = "single"),
+    #width = 0.2) +
+  scale_fill_manual(values = c("2024" = "#EC7014", "2025" = "#FEC44F")) +
+  scale_pattern_manual(values = c("Deep" = "stripe", "Shallow" = "none")) +
+  ylab(bquote(Density (m^-2))) +
+  theme_minimal() +
+  theme(panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        panel.grid.major.x = element_line(color="gray"),
+        panel.grid.minor.x = element_blank(),
+        panel.border = element_rect(color="black", fill=NA, size = 1),
+        axis.title.x = element_text(size = 12),         # Larger x-axis label
+        axis.title.y = element_text(size = 12),         # Larger y-axis label
+        axis.text.x = element_text(size = 10),  # Larger x-axis tick labels
+        axis.text.y = element_text(lineheight = 0.8, size = 10) + 
+        legend.position = "none") +
+  scale_y_continuous(limits = c(0, 0.1), breaks = seq(0, 0.1, by = 0.05)) +
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 12)) +
+  coord_flip()
+
+# Create plot for large values
+plot_large_values <- ggplot(compiled_yearly_comparison[compiled_yearly_comparison$density > 0.10, ], 
+                            aes(x = species, y = density, fill = factor(Year), pattern = depth_strata)) + 
+  geom_bar_pattern(
+    stat = "identity",
+    position = position_dodge2(width = 0.9, padding = 0.15, preserve = "single"),
+    color = "black",
+    width = 0.85,
+    pattern_fill = "black",
+    pattern_density = 0.35,
+    pattern_spacing = 0.02,
+    pattern_angle = 45) +
+  #geom_errorbar(
+    #aes(ymin = pmax(density - SD, 0), ymax = density + SD, 
+        #group = interaction(Year, depth_strata)),
+    #position = position_dodge2(width=0.9, padding = 0.15, preserve = "single"),
+    #width = 0.2) +
+  scale_fill_manual(values = c("2024" = "#EC7014", "2025" = "#FEC44F")) +
+  scale_pattern_manual(values = c("Deep" = "stripe", "Shallow" = "none")) +
+  ylab(bquote(Density (m^-2))) +
+  theme_minimal() +
+  theme(panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        panel.grid.major.x = element_line(color="gray"),
+        panel.grid.minor.x = element_blank(),
+        panel.border = element_rect(color="black", fill=NA, size = 1),
+        legend.position = "none") +
+  scale_y_continuous(limits = c(0, 0.8), breaks = seq(0, 0.8, by = 0.1)) +
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 12)) +
+  coord_flip()
+
+# Combine both plots using patchwork
+plot_small_values / plot_large_values
 ```
