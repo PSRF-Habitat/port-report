@@ -4,6 +4,118 @@ format: html
 editor: visual
 ---
 
-```{r}
+Let's try first copying everything from last year, and just adding a 5th color to the gradient and the new data to the csv...
 
+```{r}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(gtable)
+library(grid)
+library(scales)
+library(tidyverse)
+
+# Read the CSV file - EDIT THIS PATH TO MATCH YOUR FILE LOCATION
+bulb_counts <- read_csv("C:/R Projects/2025/port-report/data/POSKelp_LinearExtent2025.csv")
+
+correct_order <- c("Magnolia", "Elliot Bay Marina Breakwater", "Centennial Park", 
+                   "Piers 59 - 70", "Jack Perry Park", "Jack Block Park", "Terminal 7", 
+                   "SW Spokane St./Terminal 25", "Pier 30")
+
+bulb_counts$areaName <- factor(bulb_counts$areaName, levels = correct_order)
+bulb_counts$x_pos <- as.numeric(bulb_counts$areaName)
+bulb_counts$x_pos <- bulb_counts$x_pos * 0.35
+
+p <- ggplot(bulb_counts, aes(x = x_pos, y = totalBulbCount, fill = as.factor(year), 
+                             label = comma(totalBulbCount))) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.3), width = 0.3, color = "black", linewidth = 0.5) +
+  labs(
+    x = NULL,
+    y = "Total Bulb Count",
+    fill = "Survey Year"
+  ) +
+  theme_minimal() +
+  scale_y_continuous(
+    labels = comma,
+    breaks = seq(0, 4750, by = 500),  # Changed end point to 4750 to include 4500
+    limits = c(0, 4750)
+  ) +
+  scale_fill_manual(values = c("#F0F9E8", "#B8E39B", "#3CB371", "#126C34", "#004D26")) +
+  scale_x_continuous(expand = expansion(mult = c(0.02, 0.02))) +
+  theme(
+    legend.position = c(0.95, 0.95),
+    legend.justification = c(1, 1),
+    legend.background = element_rect(fill = "white", color = NA),
+    legend.margin = margin(5, 5, 5, 5),
+    text = element_text(size = 12),
+    axis.text.x = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    panel.grid.minor.y = element_blank(),
+    plot.margin = margin(t = 25, r = 5, b = 170, l = 5, unit = "pt"),
+    # Add these lines to reduce title sizes
+    axis.title = element_text(size = 12),
+    legend.title = element_text(size = 12)
+  )
+
+# Convert to grob
+g <- ggplotGrob(p)
+
+# Adjust these values to control positioning
+area_name_y <- 10
+map_code_y <- -135
+x_axis_title_y <- -150
+
+# Calculate positions for data centers
+x_centers <- c(0.046, 0.1525, 0.263, 0.3721, 0.48, 0.588, 0.6975, 0.805, 0.915)
+x_dividers <- c(0.101, 0.209, 0.317, 0.4255, 0.5335, 0.6421, 0.751, 0.859)
+x_offset <- 0.02
+
+# Add vertical lines for x-axis divisions
+grid_lines <- segmentsGrob(
+  x0 = unit(x_dividers + x_offset, "npc"),
+  x1 = unit(x_dividers + x_offset, "npc"),
+  y0 = unit(15, "points"),
+  y1 = unit(-140, "points"),
+  gp = gpar(col = "grey80")
+)
+
+# Create labels
+area_names <- textGrob(
+  label = unique(bulb_counts$areaName),
+  x = unit(x_centers + x_offset, "npc"),
+  y = unit(area_name_y, "points"),
+  rot = 90,
+  just = "right",
+  gp = gpar(fontsize = 10)  # Reduced from 12
+)
+
+map_codes <- textGrob(
+  label = unique(bulb_counts$mapCode),
+  x = unit(x_centers + x_offset + 0.005, "npc"),
+  y = unit(map_code_y, "points"),
+  rot = 0,
+  just = "center",
+  gp = gpar(fontsize = 10)  # Reduced from 12
+)
+
+x_axis_title <- textGrob(
+  label = "Map Code & Area Name",
+  x = unit(0.5, "npc"),
+  y = unit(x_axis_title_y, "points"),
+  just = "center",
+  gp = gpar(fontsize = 12)  # Reduced from 12
+)
+
+# Find the position of the x-axis
+axis_pos <- grep("axis-b", g$layout$name)
+
+# Replace the existing axis with our custom labels and grid lines
+g$grobs[[axis_pos]] <- gTree(children = gList(grid_lines, area_names, map_codes, x_axis_title))
+
+# Draw the plot
+grid.newpage()
+grid.draw(g)
+
+ggsave("C:/R Projects/2025/port-report/figures/BulbCount_Plot_incl2025.png",g, width=3,height=4, dpi = 500, scale = 1.75)
 ```
