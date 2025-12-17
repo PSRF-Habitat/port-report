@@ -185,6 +185,10 @@ ggplot(yearly_comparison_kelp_CP,
 yearly_comparison <- Kelp_clean %>% 
   filter(Year %in% c(2024, 2025))
 
+yearly_comparison<- yearly_comparison %>%
+  mutate(total_amount_distance = amount*(30/distance))%>%
+  mutate(density = (total_amount_distance/60))
+
 all_sites_kelp_all<- unique(yearly_comparison$site_name)
 all_species_kelp_all <- unique(yearly_comparison$species)
 all_years_kelp_all <- unique(yearly_comparison$Year)
@@ -211,15 +215,18 @@ View(yearly_comparison)
 #merging the data with the "mising data" <- fill in the blanks so all transects have all species, even if ZERO were observed for a transect
 yearly_comparison_all <- transect_grid_all %>% 
   left_join(yearly_comparison, by = c("site_name","species", "Year", "depth_strata", "transect")) %>% 
-  mutate(amount = ifelse(is.na(amount), 0, amount))
+  mutate(amount = ifelse(is.na(amount), 0, amount))%>%
+  mutate(distance = ifelse(is.na(distance), 0, distance))%>%
+  mutate(total_amount_distance = ifelse(is.na(total_amount_distance), 0, total_amount_distance))%>%
+  mutate(density = ifelse(is.na(density), 0, density))
 
 #calculating SD and Density (per depth strata, hence the 180)
 yearly_comparison_all <- yearly_comparison %>%    
   group_by(site_name, species, depth_strata, Year) %>% 
   summarise(
-    total_amount = sum(amount),
-    SD = sd(amount),
-    density = total_amount / 180)
+    total_amount = sum(total_amount_distance),
+    total_density = sum(density) / 3,
+    SD = sd(density))
 
 View(yearly_comparison_all)
 
