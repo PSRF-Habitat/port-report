@@ -73,6 +73,10 @@ yearly_comparison_kelp_CP <- Kelp_clean %>%
   filter(site_name == "Centennial Park",
          Year %in% c(2024, 2025))
 
+yearly_comparison_kelp_CP<- yearly_comparison_kelp_CP %>%
+  mutate(total_amount_distance = amount*(30/distance))%>%
+  mutate(density = (total_amount_distance/60))
+
 #creating the full table with all the missing pieces 
 all_species_kelp <- unique(yearly_comparison_kelp_CP$species)
 all_years_kelp <- unique(yearly_comparison_kelp_CP$Year)
@@ -92,40 +96,43 @@ transect_grid <- transect_grid %>%
       TRUE ~ NA_real_)) %>% 
   filter(!is.na(transect))
 
-View(transect_grid)
-View(yearly_comparison_kelp_CP)
+
+
 
 #merging the data with the "mising data" <- fill in the blanks so all transects have all species, even if ZERO were observed for a transect
 yearly_comparison_kelp_CP <- transect_grid %>% 
   left_join(yearly_comparison_kelp_CP, by = c("species", "Year", "depth_strata", "transect")) %>% 
-  mutate(amount = ifelse(is.na(amount), 0, amount))
+  mutate(amount = ifelse(is.na(amount), 0, amount))%>%
+         mutate(distance = ifelse(is.na(distance), 0, distance))%>%
+                mutate(total_amount_distance = ifelse(is.na(total_amount_distance), 0, total_amount_distance))%>%
+  mutate(density = ifelse(is.na(density), 0, density))
 
 #calculating SD and Density (per depth strata, hence the 180)
 yearly_comparison_kelp_CP <- yearly_comparison_kelp_CP %>%    
   group_by(species, depth_strata, Year) %>% 
   summarise(
-    total_amount = sum(amount),
-    SD = sd(amount),
-    density = total_amount / 180)
+    total_amount = sum(total_amount_distance),
+    total_density = sum(density) / 3,
+    SD = sd(density))
 ##Plot##
 ggplot(yearly_comparison_kelp_CP, 
-       aes(x=species, y=density, 
+       aes(x=species, y=total_density, 
            fill=factor(Year), 
            pattern = depth_strata)) + 
   geom_bar_pattern(
     stat= "identity",
     position = position_dodge2(width = .9, padding = 0.1, preserve = "single"),
     color = "black",
-    width = .7,
+    width = .9,
     pattern_fill = "black",
     pattern_density = 0.2,
     pattern_spacing = 0.02,
     pattern_angle = 45) +
  geom_errorbar(
-    aes(ymin = pmax(density-SD,0), ymax =density+SD, 
+    aes(ymin = pmax(total_density-SD,0), ymax =total_density+SD, 
         group = interaction(depth_strata, Year)),
     position = position_dodge2(width=.9, padding = 0.1, preserve = "single"),
-    width = 0.2) +  
+    width = 0.2) +
   scale_fill_manual(values=c("2024" = "#EC7014", "2025" = "#FEC44F")) +
   scale_pattern_manual(values = c("Deep" = "stripe", "Shallow" = "none")) +
   ylab(bquote(Density (m^-2))) +
@@ -166,7 +173,13 @@ ggplot(yearly_comparison_kelp_CP,
                                   color = "black")))+
   coord_flip()
 
-#####Grouped kelp density for all selected sites 2024 and 2025#####
+  
+  
+  
+  
+  
+  
+#geom_errorbarh()#####Grouped kelp density for all selected sites 2024 and 2025#####
 #creating the full table with all the missing pieces 
 yearly_comparison <- Kelp_clean %>% 
   filter(Year %in% c(2024, 2025))
