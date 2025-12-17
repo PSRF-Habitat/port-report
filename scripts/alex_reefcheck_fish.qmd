@@ -3,3 +3,57 @@ title: "alex_reefcheck_fish"
 format: html
 ---
 
+Packages
+
+```{r}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(gtable)
+library(grid)
+library(scales)
+library(tidyverse)
+library(readr)
+```
+
+initial data import
+
+```{r}
+fish_data <- read_csv("C:/R Projects/2025/port-report/data/Fish.csv")
+kelp_data <- read_csv("C:/R Projects/2025/port-report/data/Kelp.csv")
+invert_data <- read_csv("C:/R Projects/2025/port-report/data/Inverts.csv")
+```
+
+initial cleaning
+
+```{r}
+fish_data <- fish_data %>%
+  mutate(year = year(mdy(date_start))) %>%
+  select(site_name, year, transect, species, amount) %>%
+  filter(site_name %in% c("Blake Island South", "Grain Terminal", "Freshwater Bay", "Magnolia", "Seattle Waterfront", "Wing Point")) %>%
+  filter(year %in% c(2024, 2025))
+kelp_data <- kelp_data %>%
+  mutate(year = year(mdy(date_start))) %>%
+  select(site_name, year, transect, species, amount, distance) %>%
+  filter(site_name %in% c("Blake Island South", "Grain Terminal", "Freshwater Bay", "Magnolia", "Seattle Waterfront", "Wing Point")) %>%
+  filter(year %in% c(2024, 2025))
+invert_data <- invert_data %>%
+  mutate(year = year(mdy(date_start))) %>%
+  select(site_name, year, transect, species, amount, distance) %>%
+  filter(site_name %in% c("Blake Island South", "Grain Terminal", "Freshwater Bay", "Magnolia", "Seattle Waterfront", "Wing Point")) %>%
+  filter(year %in% c(2024, 2025))
+```
+
+species richness formats
+```{r}
+fish_richness <- fish_data %>%
+  group_by(site_name, species, year) %>%
+  summarise(amount = sum(amount, na.rm = TRUE), .groups = "drop")
+kelp_richness <- kelp_data %>%
+  group_by(site_name, species, year) %>%
+  summarise(amount = sum(amount, na.rm = TRUE), .groups = "drop")
+invert_richness <- invert_data %>%
+  group_by(site_name, species, year) %>%
+  summarise(amount = sum(amount, na.rm = TRUE), .groups = "drop")
+```
+

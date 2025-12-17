@@ -1,0 +1,46 @@
+mapCode,areaName,year,lengthOfShoreline,totalBulbCount,linearDensity
+A,Magnolia,2021,47,76,1.6
+A,Magnolia,2022,50,764,15.3
+A,Magnolia,2023,50,328,6.6
+A,Magnolia,2024,202,696,3.4
+A,Magnolia,2025,195,785,4.0
+B,Elliot Bay Marina Breakwater,2021,343,413,1.2
+B,Elliot Bay Marina Breakwater,2022,558,"4,430",7.9
+B,Elliot Bay Marina Breakwater,2023,415,"2,977",7.2
+B,Elliot Bay Marina Breakwater,2024,442,"1,790",4.0
+B,Elliot Bay Marina Breakwater,2025,482,739,1.5
+C,Centennial Park,2021,997,"2,587",2.6
+C,Centennial Park,2022,1165,"2,385",2.0
+C,Centennial Park,2023,1203,"3,643",3.0
+C,Centennial Park,2024,1236,"1,759",1.4
+C,Centennial Park,2025,1376,380,0.3
+D,Piers 59 - 70,2021,,,
+D,Piers 59 - 70,2022,270,994,3.7
+D,Piers 59 - 70,2023,182,"1,140",6.3
+D,Piers 59 - 70,2024,137,"1,648",12.0
+D,Piers 59 - 70,2025,201,805,4.0
+E,Jack Perry Park,2021,112,478,4.3
+E,Jack Perry Park,2022,112,389,3.5
+E,Jack Perry Park,2023,298,835,2.8
+E,Jack Perry Park,2024,266,252,0.9
+E,Jack Perry Park,2025,243,187,0.8
+F,Jack Block Park,2021,50,5,0.1
+F,Jack Block Park,2022,87,41,0.5
+F,Jack Block Park,2023,214,44,0.2
+F,Jack Block Park,2024,90,50,0.6
+F,Jack Block Park,2025,176,134,0.8
+G,Terminal 7,2021,41,78,1.9
+G,Terminal 7,2022,15,3,0.2
+G,Terminal 7,2023,63,48,0.8
+G,Terminal 7,2024,162,4,0.0
+G,Terminal 7,2025,67,110,1.6
+H,SW Spokane St./Terminal 25,2021,147,99,0.7
+H,SW Spokane St./Terminal 25,2022,150,24,0.2
+H,SW Spokane St./Terminal 25,2023,248,209,0.8
+H,SW Spokane St./Terminal 25,2024,395,46,0.1
+H,SW Spokane St./Terminal 25,2025,564,637,1.1
+I,Pier 30,2021,0,0,0.0
+I,Pier 30,2022,0,0,0.0
+I,Pier 30,2023,27,3,0.1
+I,Pier 30,2024,0,0,0.0
+I,Pier 30,2025,0,0,0.0
