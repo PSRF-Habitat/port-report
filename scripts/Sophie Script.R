@@ -121,7 +121,7 @@ ggplot(yearly_comparison_kelp_CP,
            pattern = depth_strata)) + 
   geom_bar_pattern(
     stat= "identity",
-    position = position_dodge2(width = .9, padding = 0.1, preserve = "single"),
+    position = position_dodge(width = 0.9),  # MK trying a different dodge function
     color = "black",
     width = .9,
     pattern_fill = "black",
@@ -130,8 +130,9 @@ ggplot(yearly_comparison_kelp_CP,
     pattern_angle = 45) +
  geom_errorbar(
     aes(ymin = pmax(total_density-SD,0), ymax =total_density+SD, 
-        group = interaction(depth_strata, Year)),
-    position = position_dodge2(width=.9, padding = 0.1, preserve = "single"),
+     #   group = interaction(Year, depth_strata)    # MK kind of thinking this is optional and possibly throwing things off
+        ),
+    position = position_dodge(width = 0.9), # MK trying a different dodge function
     width = 0.2) +
   scale_fill_manual(values=c("2024" = "#EC7014", "2025" = "#FEC44F")) +
   scale_pattern_manual(values = c("Deep" = "stripe", "Shallow" = "none")) +
