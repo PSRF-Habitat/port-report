@@ -74,9 +74,24 @@ ggplot() +
       "centennialpark" = "Centennial Park",
       "jeffersonhead" = "Jefferson Head",
       "edmonds" = "Edmonds",
-      "wingpoint" = "Wing Point"
-    )
-  )
+      "wingpoint" = "Wing Point"))+
+  theme_minimal() +
+  theme(panel.border=element_rect(color="black",
+                                  fill=NA,
+                                  size = 1),
+        panel.grid.major = element_line(color = "gray", size = 0.5),  # Major grid lines
+        panel.grid.minor = element_line(color = "lightgray", size = 0.25),  # Minor grid lines
+        axis.title.x = element_text(margin = margin(t = 10)),
+        legend.position = c("right"),
+        legend.justification = c("center"),
+        legend.background = element_rect(fill = "white", color = NA),
+        legend.margin = margin(5, 5, 5, 5), # Increase legend text and key size
+        legend.text = element_text(size = 13),          # Larger legend text
+        legend.title = element_text(size = 13),         # Larger legend title
+        legend.key.size = unit(2, "lines"),           # Larger legend keys
+        legend.key.height = unit(1.2, "lines"),         # Adjust the height of legend keys (if necessary)
+        legend.key.width = unit(2, "lines"),
+        text = element_text(size=14))
 
 
 #####Temperature of all selected sites  2024-2025 (BOTTOM)#####
@@ -136,7 +151,24 @@ ggplot() +
       "centennialpark" = "Centennial Park",
       "jeffersonhead" = "Jefferson Head",
       "edmonds" = "Edmonds",
-      "wingpoint" = "Wing Point"))
+      "wingpoint" = "Wing Point"))+
+  theme_minimal() +
+  theme(panel.border=element_rect(color="black",
+                                  fill=NA,
+                                  size = 1),
+        panel.grid.major = element_line(color = "gray", size = 0.5),  # Major grid lines
+        panel.grid.minor = element_line(color = "lightgray", size = 0.25),  # Minor grid lines
+        axis.title.x = element_text(margin = margin(t = 10)),
+        legend.position = c("right"),
+        legend.justification = c("center"),
+        legend.background = element_rect(fill = "white", color = NA),
+        legend.margin = margin(5, 5, 5, 5), # Increase legend text and key size
+        legend.text = element_text(size = 13),          # Larger legend text
+        legend.title = element_text(size = 13),         # Larger legend title
+        legend.key.size = unit(2, "lines"),           # Larger legend keys
+        legend.key.height = unit(1.2, "lines"),         # Adjust the height of legend keys (if necessary)
+        legend.key.width = unit(2, "lines"),
+        text = element_text(size=14))
 
  
 
@@ -192,7 +224,43 @@ ggplot() +
       "edmonds" = "Edmonds",
       "wingpoint" = "Wing Point"
     )
-  )
+  )+
+  theme_minimal() +
+  theme(panel.border=element_rect(color="black",
+                                  fill=NA,
+                                  size = 1),
+        panel.grid.major = element_line(color = "gray", size = 0.5),  # Major grid lines
+        panel.grid.minor = element_line(color = "lightgray", size = 0.25),  # Minor grid lines
+        axis.title.x = element_text(margin = margin(t = 10)),
+        legend.position = c("right"),
+        legend.justification = c("center"),
+        legend.background = element_rect(fill = "white", color = NA),
+        legend.margin = margin(5, 5, 5, 5), # Increase legend text and key size
+        legend.text = element_text(size = 13),          # Larger legend text
+        legend.title = element_text(size = 13),         # Larger legend title
+        legend.key.size = unit(2, "lines"),           # Larger legend keys
+        legend.key.height = unit(1.2, "lines"),         # Adjust the height of legend keys (if necessary)
+        legend.key.width = unit(2, "lines"),
+        text = element_text(size=14))
+
+
+
+#####Dissolved Oxygen of all selected sited 2025 (BOTTOM)#####
+all_site_do_bottom<-all_site_DO %>%
+  filter(position %in% c("bottom"))%>%
+  filter(site %in% c("centennialpark", "wingpoint", "edmonds", "jeffersonhead"))
+
+daily_do_bottom <- all_site_do_bottom %>%
+  filter(do_conc_mg_per_L>=0 | is.na(do_conc_mg_per_L))%>%
+  mutate(date = as.Date(datetime)) %>%
+  group_by(site, date) %>%
+  summarise(
+    daily_avg_do = mean(do_conc_mg_per_L, na.rm = TRUE),
+    .groups = "drop")
+
+daily_do_bottom<- daily_do_bottom %>%
+  filter(date>=as.Date("2024-12-13"),
+         date<=as.Date("2025-12-30"))
 
 ##plot bottom do##
 ggplot() +
@@ -225,23 +293,25 @@ ggplot() +
       "edmonds" = "Edmonds",
       "wingpoint" = "Wing Point"
     )
-  )
-#####Dissolved Oxygen of all selected sited 2025 (BOTTOM)#####
-all_site_do_bottom<-all_site_DO %>%
-  filter(position %in% c("bottom"))%>%
-  filter(site %in% c("centennialpark", "wingpoint", "edmonds", "jeffersonhead"))
+  )+
+  theme_minimal() +
+  theme(panel.border=element_rect(color="black",
+                                  fill=NA,
+                                  size = 1),
+        panel.grid.major = element_line(color = "gray", size = 0.5),  # Major grid lines
+        panel.grid.minor = element_line(color = "lightgray", size = 0.25),  # Minor grid lines
+        axis.title.x = element_text(margin = margin(t = 10)),
+        legend.position = c("right"),
+        legend.justification = c("center"),
+        legend.background = element_rect(fill = "white", color = NA),
+        legend.margin = margin(5, 5, 5, 5), # Increase legend text and key size
+        legend.text = element_text(size = 13),          # Larger legend text
+        legend.title = element_text(size = 13),         # Larger legend title
+        legend.key.size = unit(2, "lines"),           # Larger legend keys
+        legend.key.height = unit(1.2, "lines"),         # Adjust the height of legend keys (if necessary)
+        legend.key.width = unit(2, "lines"),
+        text = element_text(size=14))
 
-daily_do_bottom <- all_site_do_bottom %>%
-  filter(do_conc_mg_per_L>=0 | is.na(do_conc_mg_per_L))%>%
-  mutate(date = as.Date(datetime)) %>%
-  group_by(site, date) %>%
-  summarise(
-    daily_avg_do = mean(do_conc_mg_per_L, na.rm = TRUE),
-    .groups = "drop")
-
-daily_do_bottom<- daily_do_bottom %>%
-  filter(date>=as.Date("2024-12-13"),
-         date<=as.Date("2025-12-30"))
 
 #####Kelp#####
 Kelp <- read_csv("data/Kelp.csv")
