@@ -507,44 +507,224 @@ ggsave('C:/Users/kari/OneDrive/Data Work/Port of Seattle Report/port-report/figu
 
 Kelp Index data...cleaning and then filtering for each specific data that I want to use
 
-pH
-
 ```{r}
 gs4_auth()
-index_data_file <- drive_download(as_id("1fQA96tL4XNMcVX8IsmIT5CPsHC8tIamu"),
+index_data_file <- drive_download(as_id("1ltFtDnOoMwLNBFVaQpp--U4_WzvAULDo"),
                                   path = tempfile(fileext = ".csv"))
 index_data <- read_csv(index_data_file$local_path)
 
 # clean up environment
 rm(index_data_file)
 
-#converting date to correct format
-str(pH) #check structure and confirm date is character
-pH$Date <- as.Date(pH$Date,format = "%m/%d/%Y")
-str(pH)
+#splitting datetime column into two columns and converting date to correct format
+index_data <- index_data %>% 
+  mutate(
+    date = as.Date(datetime),
+    time = format(datetime, "%H:%M:%S")
+  )
 
 #filtering by site
+sites_to_keep <-
+  c("centennialpark", "edmonds", "jeffersonhead", "wingpoint")
+
+index_data_filtered <- index_data %>% 
+  filter(site %in% sites_to_keep) 
 
 
+#filter columns to keep
+columns_to_keep <-
+  c("site", 
+    "position", 
+    "pH", 
+    "high_range_microsiemens_per_cm",
+    "ph_temp_c",
+    "con_temp_c",
+    "date",
+    "time",
+    "abs_pres_kpa")
 
-#pH daily average surface and bottom
-#surface
-#bottom
+index_data_final <- index_data_filtered %>% 
+  select(all_of(columns_to_keep))
+
+#filtering out the data that doesn't overlap with Centennial Park
+cutoff_Date <- as.Date("2024-09-19")
+index_data_final <- index_data_final %>% 
+  filter(date >= cutoff_Date)
+
+#adding a year column ONLY
+index_data_final <- index_data_final %>% 
+  mutate(year = year(date))
+
+#data is now ready with the sites that I want to use and the data (pH and conductivity)
+```
+
+pH
+
+```{r}
+
+#pH daily average surface and bottom by Site
+daily_average_pH <-index_data_final %>% 
+  group_by(site, date, position) %>% 
+  summarise(
+    mean_pH = mean(pH, na.rm = TRUE),
+    n = n(),
+    .groups = "drop")
+
+daily_average_pH <- daily_average_pH %>% 
+  mutate(year = year(date))
 
 
+#removing rows that have >96 and <96 readings
+daily_average_pH <- daily_average_pH %>% 
+  filter(n == 95)
 
+#removing rows that have no associated data
+daily_average_pH <- daily_average_pH %>% 
+  filter(!is.nan(mean_pH))
+
+#removing rows with pH >8.5
+daily_average_pH <- daily_average_pH %>% 
+  filter(mean_pH < 8.5)
+
+#making the x-axis of my plot into the annual quarters (Jan, Apl, Jul, Oct)
+quarterly_breaks <- seq(
+  from = floor_date(min(daily_average_pH$date), "year"),
+  to = ceiling_date(max(daily_average_pH$date), "year"),
+  by = "3 months")
+
+
+#plotting two pannel plot with surface and bottom position
+#surface on top panel, bottom on bottom panel
+daily_average_pH$position <- factor(
+  daily_average_pH$position, 
+  levels = c("surface", "bottom"))
+
+ggplot(daily_average_pH, 
+       aes(x = date, y= mean_pH, color = site)) +
+  geom_line(size = 1) +
+  geom_point(size = 0.5) +
+  facet_wrap(~position, ncol = 1, scales = "free_y",
+             labeller = as_labeller((c(surface = "Surface", bottom = "Bottom")))) +
+  scale_x_date(
+    breaks = quarterly_breaks,
+    date_labels="%b-%y") +
+labs(x = "Month-Year",
+     y = "Daily Average pH",
+     color = "Site") +
+  theme_minimal() +
+  theme(panel.border=element_rect(color="black",
+                                  fill=NA,
+                                  size = 1),
+        panel.grid.major = element_line(color = "gray", size = 0.5),  # Major grid lines
+        panel.grid.minor = element_line(color = "lightgray", size = 0.25),  # Minor grid lines
+        axis.title.x = element_text(margin = margin(t = 10)),
+        legend.position = c("right"),
+        legend.justification = c("center"),
+        legend.background = element_rect(fill = "white", color = NA),
+        legend.margin = margin(5, 5, 5, 5), # Increase legend text and key size
+        legend.text = element_text(size = 13),          # Larger legend text
+        legend.title = element_text(size = 13),         # Larger legend title
+        legend.key.size = unit(2, "lines"),           # Larger legend keys
+        legend.key.height = unit(1.2, "lines"),         # Adjust the height of legend keys (if necessary)
+        legend.key.width = unit(2, "lines"),
+        text = element_text(size=14)) +
+  scale_color_manual(values = c("edmonds" = "#6BAED6",
+                                "wingpoint" = "#74C476",
+                                "centennialpark"= "#FEC44F", 
+                                "jeffersonhead" = "#C994C7"), # Custom colors 
+                                labels = c("centennialpark" = "Centennial Park",
+                                           "jeffersonhead" = "Jefferson Head",
+                                           "edmonds" = "Edmonds",
+                                           "wingpoint" = "Wing Point"))
+
+ggsave('C:/Users/kari/OneDrive/Data Work/Port of Seattle Report/port-report/figures/Daily Average pH @ Centennial Park with Site Comparisons 2024-2025.jpg', 
+       width = 6, height = 4, dpi = 500, scale = 1.75)
+                 
 ```
 
 Conductivity
 
 ```{r}
 #conductivity daily average surface and bottom
-index_data_file <- drive_download(as_id("1fQA96tL4XNMcVX8IsmIT5CPsHC8tIamu"),
-                                  path = tempfile(fileext = ".csv"))
-index_data <- read_csv(index_data_file$local_path)
+#converting microsiements to salinity
+install.packages("gsw") #R package for salinity conversion
+library(gsw)
 
-#surface
-#bottom
+#converting microsiements to mS and kpac to dbar
+index_data_final <- index_data_final %>% 
+  mutate(
+    pressure_dbar = if_else(position == "surface", 0, abs_pres_kpa / 10),
+    conductivity_mS = high_range_microsiemens_per_cm / 1000,
+    salinity = gsw_SP_from_C(conductivity_mS, con_temp_c, pressure_dbar))
 
+#daily average CON
+daily_average_CON <-index_data_final %>% 
+  group_by(site, date, position) %>% 
+  summarise(
+    mean_CON = mean(salinity, na.rm = TRUE),
+    n = n(),
+    .groups = "drop")
+
+daily_average_CON <- daily_average_CON %>% 
+  mutate(year = year(date))
+
+#removing rows that have no associated data
+daily_average_CON <- daily_average_CON %>% 
+  filter(!is.nan(mean_CON))
+
+#removing rows that have >96 and <96 readings
+daily_average_CON <- daily_average_CON %>% 
+  filter(n == 95)
+
+#making the x-axis of my plot into the annual quarters (Jan, Apl, Jul, Oct)
+quarterly_breaks <- seq(
+  from = floor_date(min(daily_average_pH$date), "year"),
+  to = ceiling_date(max(daily_average_pH$date), "year"),
+  by = "3 months")
+
+
+#plotting two pannel plot with surface and bottom position
+#surface on top panel, bottom on bottom panel
+daily_average_CON$position <- factor(
+  daily_average_CON$position, 
+  levels = c("surface", "bottom"))
+
+ggplot(daily_average_CON, 
+       aes(x = date, y= mean_CON, color = site)) +
+  geom_line(size = 1) +
+  geom_point(size = 0.5) +
+  facet_wrap(~position, ncol = 1, scales = "free_y",
+             labeller = as_labeller((c(surface = "Surface", bottom = "Bottom")))) +
+  scale_x_date(
+    breaks = quarterly_breaks,
+    date_labels="%b-%y") +
+labs(x = "Month-Year",
+     y = "Daily Average Salinity",
+     color = "Site") +
+  theme_minimal() +
+  theme(panel.border=element_rect(color="black",
+                                  fill=NA,
+                                  size = 1),
+        panel.grid.major = element_line(color = "gray", size = 0.5),  # Major grid lines
+        panel.grid.minor = element_line(color = "lightgray", size = 0.25),  # Minor grid lines
+        axis.title.x = element_text(margin = margin(t = 10)),
+        legend.position = c("right"),
+        legend.justification = c("center"),
+        legend.background = element_rect(fill = "white", color = NA),
+        legend.margin = margin(5, 5, 5, 5), # Increase legend text and key size
+        legend.text = element_text(size = 13),          # Larger legend text
+        legend.title = element_text(size = 13),         # Larger legend title
+        legend.key.size = unit(2, "lines"),           # Larger legend keys
+        legend.key.height = unit(1.2, "lines"),         # Adjust the height of legend keys (if necessary)
+        legend.key.width = unit(2, "lines"),
+        text = element_text(size=14)) +
+  scale_color_manual(values = c("edmonds" = "#6BAED6",
+                                "wingpoint" = "#74C476",
+                                "centennialpark"= "#FEC44F", 
+                                "jeffersonhead" = "#C994C7"), # Custom colors 
+                                labels = c("centennialpark" = "Centennial Park",
+                                           "jeffersonhead" = "Jefferson Head",
+                                           "edmonds" = "Edmonds",
+                                           "wingpoint" = "Wing Point"))
 
 ```
