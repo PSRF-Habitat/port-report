@@ -18,7 +18,19 @@ library("stringr")
 library("ggpattern")
 
 #####Instruments#####
+Here is some code to access the updated index data straight from the drive. As you run it, be sure to follow the instructions popping up in your console to make sure you link your Google account!
+  
+  
+  # load libraries
+  library(googledrive)
 
+# read in data
+index_data_file <- drive_download(as_id("1ltFtDnOoMwLNBFVaQpp--U4_WzvAULDo"), path = tempfile(fileext = ".csv"))
+
+index_data <- read_csv(index_data_file$local_path)
+
+# clean up environment
+rm(index_data_file)
 #####Temperature of all selected sites 2024-2025 (SURFACE)#####
 
 
@@ -134,7 +146,7 @@ ggplot(yearly_comparison_kelp_CP,
         ),
     position = position_dodge(width = 0.9), # MK trying a different dodge function
     width = 0.2) +
-  scale_fill_manual(values=c("2024" = "#EC7014", "2025" = "#FEC44F")) +
+  scale_fill_manual(values=c("2024" = "chartreuse4", "2025" = "chartreuse2")) +
   scale_pattern_manual(values = c("Deep" = "stripe", "Shallow" = "none")) +
   ylab(bquote(Density (m^-2))) +
   theme_minimal() +
@@ -159,7 +171,7 @@ ggplot(yearly_comparison_kelp_CP,
         axis.title.y = element_text(size = 12),         # Larger y-axis label
         axis.text.x = element_text(size = 9),  # Larger x-axis tick labels
         axis.text.y = element_text(lineheight = 0.8, size = 10)) +       # Larger y-axis tick labels)
-  labs(x="Species", y="Density (m^2)") +
+  labs(x="Species", y = expression(Density~(m^2))) +
   guides(fill = guide_legend(title = "Year", order = 1,
                              override.aes = (list(
                                pattern = "none",
@@ -220,14 +232,6 @@ yearly_comparison_all <- transect_grid_all %>%
   mutate(total_amount_distance = ifelse(is.na(total_amount_distance), 0, total_amount_distance))%>%
   mutate(density = ifelse(is.na(density), 0, density))
 
-#calculating SD and Density (per depth strata, hence the 180)
-yearly_comparison_all <- yearly_comparison %>%    
-  group_by(site_name, species, depth_strata, Year) %>% 
-  summarise(
-    total_amount = sum(total_amount_distance),
-    total_density = sum(density) / 3,
-    SD = sd(density))
-
 View(yearly_comparison_all)
 
 #filtering grouped species
@@ -238,26 +242,35 @@ yearly_comparison_all <- yearly_comparison_all %>%
    species %in% c ("Winged Kelp", "Three-Ribbed Kelp", "Sugar Kelp", "Sieve Kelp", "Five-Ribbed Kelp") ~ "Prostrate",
    TRUE ~ "Other"))
 
+#calculating SD and Density (per depth strata, hence the 180)
+yearly_comparison_all <- yearly_comparison_all %>%    
+  group_by(site_name, species_group, depth_strata, Year) %>% 
+  summarise(
+    total_amount = sum(total_amount_distance),
+    total_density = sum(density) / 3,
+    SD = sd(density))
+
 ##plots##
 ggplot(yearly_comparison_all, 
-       aes(x=species_group, y=density, 
+       aes(x=species_group, y=total_density, 
            fill=factor(Year), 
            pattern = depth_strata)) + 
   geom_bar_pattern(
     stat= "identity",
-    position = position_dodge2(width = .9, padding = 0.1, preserve = "single"),
+    position = position_dodge(width = .9),
     color = "black",
     width = .7,
     pattern_fill = "black",
     pattern_density = 0.2,
     pattern_spacing = 0.02,
     pattern_angle = 45) +
-  #geom_errorbar(
-    #aes(ymin = pmax(density-SD,0), ymax =density+SD, 
-       # group = interaction(depth_strata, Year)),
-    #position = position_dodge2(width=.9, padding = 0.1, preserve = "single"),
-   # width = 0.2) +  
-  scale_fill_manual(values=c("2024" = "#EC7014", "2025" = "#FEC44F")) +
+  geom_errorbar(
+    aes(ymin = pmax(total_density-SD,0), ymax =total_density+SD, 
+       #group = interaction(depth_strata, Year)
+       ),
+    position = position_dodge(width=.9),
+   width = 0.2) +  
+  scale_fill_manual(values=c("2024" = "chartreuse4", "2025" = "chartreuse2")) +
   scale_pattern_manual(values = c("Deep" = "stripe", "Shallow" = "none")) +
   ylab(bquote(Density (m^-2))) +
   facet_wrap(~ site_name, ncol = 3)+
@@ -283,7 +296,7 @@ ggplot(yearly_comparison_all,
         axis.title.y = element_text(size = 12),         # Larger y-axis label
         axis.text.x = element_text(size = 9),  # Larger x-axis tick labels
         axis.text.y = element_text(lineheight = 0.8, size = 10)) +       # Larger y-axis tick labels)
-  labs(x="Species", y="Density (m^2)") +
+  labs(x="Species", y = expression(Density~(m^2))) +
   guides(fill = guide_legend(title = "Year", order = 1,
                              override.aes = (list(
                                pattern = "none",
