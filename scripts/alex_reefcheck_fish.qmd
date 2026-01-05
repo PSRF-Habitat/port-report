@@ -1,0 +1,89 @@
+---
+title: "alex_reefcheck_fish"
+format: html
+---
+
+Packages
+
+```{r}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(gtable)
+library(grid)
+library(scales)
+library(tidyverse)
+library(readr)
+```
+
+initial data import
+
+```{r}
+fish_data <- read_csv("C:/R Projects/2025/port-report/data/Fish.csv")
+kelp_data <- read_csv("C:/R Projects/2025/port-report/data/Kelp.csv")
+invert_data <- read_csv("C:/R Projects/2025/port-report/data/Inverts.csv")
+```
+
+initial cleaning
+
+```{r}
+select_fish_data <- fish_data %>%
+  mutate(year = year(mdy(date_start))) %>%
+  select(site_name, year, transect, species, amount) %>%
+  filter(site_name %in% c("Blake Island South", "Grain Terminal", "Freshwater Bay", "Magnolia", "Seattle Waterfront", "Wing Point")) %>%
+  filter(year %in% c(2024, 2025))
+kelp_data <- kelp_data %>%
+  mutate(year = year(mdy(date_start))) %>%
+  select(site_name, year, transect, species, amount, distance) %>%
+  filter(site_name %in% c("Blake Island South", "Grain Terminal", "Freshwater Bay", "Magnolia", "Seattle Waterfront", "Wing Point")) %>%
+  filter(year %in% c(2024, 2025))
+invert_data <- invert_data %>%
+  mutate(year = year(mdy(date_start))) %>%
+  select(site_name, year, transect, species, amount, distance) %>%
+  filter(site_name %in% c("Blake Island South", "Grain Terminal", "Freshwater Bay", "Magnolia", "Seattle Waterfront", "Wing Point")) %>%
+  filter(year %in% c(2024, 2025))
+```
+
+species richness formats
+```{r}
+fish_richness <- select_fish_data %>%
+  group_by(site_name, species, year) %>%
+  summarise(amount = sum(amount, na.rm = TRUE), .groups = "drop")
+kelp_richness <- kelp_data %>%
+  group_by(site_name, species, year) %>%
+  summarise(amount = sum(amount, na.rm = TRUE), .groups = "drop")
+invert_richness <- invert_data %>%
+  group_by(site_name, species, year) %>%
+  summarise(amount = sum(amount, na.rm = TRUE), .groups = "drop")
+```
+
+now moving on to fish only for graphs...
+
+```{r}
+#assiging depth strata to transects
+working_fish_data <- select_fish_data %>%
+  group_by(site_name, species, year, transect)%>%
+  summarise(amount = sum(amount, na.rm=TRUE), .groups = "drop") %>%
+  mutate(
+    depth_stratum = case_when(     
+      transect %in% c(1:3, 7:12) ~ "deep",
+      transect %in% c(4:6, 13:18) ~ "shallow",
+      TRUE ~ NA_character_),
+    density = amount/120) %>%
+  filter(!is.na(depth_stratum))
+
+
+#group by depth stratum, year, species; sum amounts
+fish_strata <- working_fish_data %>%
+  group_by(site_name, species, year, depth_stratum) %>%
+  summarise(
+    amount=sum(amount, na.rm=TRUE),
+    density = sum(density, na.rm=TRUE)/3,
+    .groups="drop")
+
+#check on completeness of data
+fish_check <- select_fish_data %>%
+  group_by(site_name, year) %>%
+  mutate(transect_count = n_distinct(transect))
+```
+
