@@ -21,15 +21,66 @@ library("ggpattern")
 kelp_index_combined_sensor_data_2025_12_17 <- read_csv("~/Desktop/PSRF-R Work/kelp_index_combined_sensor_data_2025-12-17.csv")
 View(kelp_index_combined_sensor_data_2025_12_17)
 #####Temperature of all selected sites 2024-2025 (SURFACE)#####
-all_site_temp<-subset(kelp_index_combined_sensor_data_2025_12_17, select = c(site, position, datetime, temp_logger_id, tidbit_temp_c, ph_temp_c))
+all_site_temp<-subset(kelp_index_combined_sensor_data_2025_12_17, select = c(site, position, datetime, temp_logger_id, tidbit_temp_c, ph_temp_c, wl_temp_c))
 View(all_site_temp)
 
 all_site_temp_surface<-all_site_temp %>%
   filter(position %in% c("surface"))%>%
   filter(site %in% c("centennialpark", "wingpoint", "edmonds", "jeffersonhead"))
 
+View(all_site_temp_surface)
+
+##daily averages#
+daily_temp_surface <- all_site_temp_surface %>%
+  mutate(date = as.Date(datetime)) %>%
+  group_by(site, date) %>%
+  summarise(
+    daily_avg_temp_sur = mean(tidbit_temp_c, na.rm = TRUE),
+    .groups = "drop")
+
+View(daily_temp_surface)
+
+daily_temp_surface<- daily_temp_surface %>%
+  filter(date>=as.Date("2024-09-18"),
+         date<=as.Date("2025-12-30"))
+
+####Plot surface temps##
+
+ggplot() +
+  geom_line(
+    data = subset(daily_temp_surface, site != "centennialpark"),
+    aes(x = date, y = daily_avg_temp_sur, color = site),
+    size = 1
+  ) +
+  geom_line(
+    data = subset(daily_temp_surface, site == "centennialpark"),
+    aes(x = date, y = daily_avg_temp_sur, color = site),
+    size = 1.3   # optional: slightly thicker
+  ) +
+  labs(
+    title = "Daily Average Surface Temperature by Site",
+    x = "Date",
+    y = "Temperature (°C)",
+    color = "Site"
+  ) +
+  scale_color_manual(
+    values = c(
+      "edmonds" = "#6BAED6",
+      "wingpoint" = "#74C476",
+      "centennialpark" = "#FEC44F",
+      "jeffersonhead" = "#C994C7"
+    ),
+    labels = c(
+      "centennialpark" = "Centennial Park",
+      "jeffersonhead" = "Jefferson Head",
+      "edmonds" = "Edmonds",
+      "wingpoint" = "Wing Point"
+    )
+  )
+
+
 #####Temperature of all selected sites  2024-2025 (BOTTOM)#####
-all_site_temp<-subset(kelp_index_combined_sensor_data_2025_12_17, select = c(site, position, datetime, temp_logger_id, tidbit_temp_c, ph_temp_c))
+all_site_temp<-subset(kelp_index_combined_sensor_data_2025_12_17, select = c(site, position, datetime, temp_logger_id, tidbit_temp_c, ph_temp_c, wl_temp_c))
 #View(all_site_temp)
 
 all_site_temp_bottom<-all_site_temp %>%
@@ -42,40 +93,155 @@ daily_temp_bottom <- all_site_temp_bottom %>%
   mutate(date = as.Date(datetime)) %>%
   group_by(site, date) %>%
   summarise(
-    daily_avg_temp = mean(ph_temp_c, na.rm = TRUE),
+    ph_mean = mean(ph_temp_c, na.rm = TRUE),
+    do_mean = mean(wl_temp_c, na.rm = TRUE),
+    daily_avg_temp = mean(c(ph_mean, do_mean), na.rm = TRUE),
     .groups = "drop"
   )
-
 View(daily_temp_bottom)
 
 daily_temp_bottom<- daily_temp_bottom %>%
   filter(date>=as.Date("2024-09-18"),
          date<=as.Date("2025-12-30"))
 
-#plot#
 
 
-# Plot with custom colors
-ggplot(daily_temp_bottom, aes(x = date, y = daily_avg_temp, color = site)) +
-  geom_line(size = 1) +
+
+# Plot with custom colors#
+ggplot() +
+  geom_line(
+    data = subset(daily_temp_bottom, site != "centennialpark"),
+    aes(x = date, y = daily_avg_temp, color = site),
+    size = 1
+  ) +
+  geom_line(
+    data = subset(daily_temp_bottom, site == "centennialpark"),
+    aes(x = date, y = daily_avg_temp, color = site),
+    size = 1.3   # optional: slightly thicker
+  ) +
   labs(
     title = "Daily Average Bottom Temperature by Site",
     x = "Date",
     y = "Temperature (°C)",
     color = "Site"
   ) +
-  scale_color_manual(values = c("centennialpark"="red", "wingpoint"="blue", "jeffersonhead"="green", "edmonds"="purple")) +
-  theme_minimal() +
-  theme(
-    axis.text.x = element_text(angle = 45, hjust = 1)
-  )
+  scale_color_manual(
+    values = c(
+      "edmonds" = "#08519C",
+      "wingpoint" = "#006D2C",
+      "centennialpark" = "#EC7014",
+      "jeffersonhead" = "#810F7C"
+    ),
+    labels = c(
+      "centennialpark" = "Centennial Park",
+      "jeffersonhead" = "Jefferson Head",
+      "edmonds" = "Edmonds",
+      "wingpoint" = "Wing Point"))
+
+ 
 
 
 #####Dissolved Oxygen of all selected sites 2025 (SURFACE)#####
+all_site_DO<-subset(kelp_index_combined_sensor_data_2025_12_17, select = c(site, position, datetime, do_logger_id, do_conc_mg_per_L))
 
+all_site_do_surface<-all_site_DO %>%
+  filter(position %in% c("surface"))%>%
+  filter(site %in% c("centennialpark", "wingpoint", "edmonds", "jeffersonhead"))
 
+daily_do_surface <- all_site_do_surface %>%
+  filter(do_conc_mg_per_L>=0 | is.na(do_conc_mg_per_L))%>%
+  mutate(date = as.Date(datetime)) %>%
+  group_by(site, date) %>%
+  summarise(
+    daily_avg_do_sur = mean(do_conc_mg_per_L, na.rm = TRUE),
+    .groups = "drop")
+
+View(daily_do_surface)
+
+daily_do_surface<- daily_do_surface %>%
+  filter(date>=as.Date("2024-12-13"),
+         date<=as.Date("2025-12-30"))
+#plot surface do#
+ggplot() +
+  geom_line(
+    data = subset(daily_do_surface, site != "centennialpark"),
+    aes(x = date, y = daily_avg_do_sur, color = site),
+    size = 1
+  ) +
+  geom_line(
+    data = subset(daily_do_surface, site == "centennialpark"),
+    aes(x = date, y = daily_avg_do_sur, color = site),
+    size = 1.3   # optional: slightly thicker
+  ) +
+  labs(
+    title = "Daily Average Surface Dissolved Oxygen by Site",
+    x = "Date",
+    y = "Temperature (°C)",
+    color = "Site"
+  ) +
+  scale_color_manual(
+    values = c(
+      "edmonds" = "#6BAED6",
+      "wingpoint" = "#74C476",
+      "centennialpark" = "#FEC44F",
+      "jeffersonhead" = "#C994C7"
+    ),
+    labels = c(
+      "centennialpark" = "Centennial Park",
+      "jeffersonhead" = "Jefferson Head",
+      "edmonds" = "Edmonds",
+      "wingpoint" = "Wing Point"
+    )
+  )
+
+##plot bottom do##
+ggplot() +
+  geom_line(
+    data = subset(daily_do_bottom, site != "centennialpark"),
+    aes(x = date, y = daily_avg_do, color = site),
+    size = 1
+  ) +
+  geom_line(
+    data = subset(daily_do_bottom, site == "centennialpark"),
+    aes(x = date, y = daily_avg_do, color = site),
+    size = 1.3   # optional: slightly thicker
+  ) +
+  labs(
+    title = "Daily Average Bottom Dissolved Oxygen by Site",
+    x = "Date",
+    y = "Temperature (°C)",
+    color = "Site"
+  ) +
+  scale_color_manual(
+    values = c(
+      "edmonds" = "#08519C",
+      "wingpoint" = "#006D2C",
+      "centennialpark" = "#EC7014",
+      "jeffersonhead" = "#810F7C"
+    ),
+    labels = c(
+      "centennialpark" = "Centennial Park",
+      "jeffersonhead" = "Jefferson Head",
+      "edmonds" = "Edmonds",
+      "wingpoint" = "Wing Point"
+    )
+  )
 #####Dissolved Oxygen of all selected sited 2025 (BOTTOM)#####
+all_site_do_bottom<-all_site_DO %>%
+  filter(position %in% c("bottom"))%>%
+  filter(site %in% c("centennialpark", "wingpoint", "edmonds", "jeffersonhead"))
 
+daily_do_bottom <- all_site_do_bottom %>%
+  filter(do_conc_mg_per_L>=0 | is.na(do_conc_mg_per_L))%>%
+  mutate(date = as.Date(datetime)) %>%
+  group_by(site, date) %>%
+  summarise(
+    daily_avg_do = mean(do_conc_mg_per_L, na.rm = TRUE),
+    .groups = "drop")
+
+daily_do_bottom<- daily_do_bottom %>%
+  filter(date>=as.Date("2024-12-13"),
+         date<=as.Date("2025-12-30"))
 
 #####Kelp#####
 Kelp <- read_csv("data/Kelp.csv")
@@ -144,7 +310,7 @@ transect_grid <- transect_grid %>%
 
 
 
-#merging the data with the "mising data" <- fill in the blanks so all transects have all species, even if ZERO were observed for a transect
+#merging the data with the "missing data" <- fill in the blanks so all transects have all species, even if ZERO were observed for a transect
 yearly_comparison_kelp_CP <- transect_grid %>% 
   left_join(yearly_comparison_kelp_CP, by = c("species", "Year", "depth_strata", "transect")) %>% 
   mutate(amount = ifelse(is.na(amount), 0, amount))%>%
@@ -284,7 +450,7 @@ yearly_comparison_all <- yearly_comparison_all %>%
     SD = sd(density))
 
 ##plots##
-ggplot(yearly_comparison_all, 
+AllSite_Kelp<- ggplot(yearly_comparison_all, 
        aes(x=species_group, y=total_density, 
            fill=factor(Year), 
            pattern = depth_strata)) + 
@@ -344,3 +510,7 @@ ggplot(yearly_comparison_all,
                                   color = "black")))+
   coord_flip()
  
+
+##
+ggsave('C:/2025/port-report/figures/ KelpAllSites.jpg', 
+       width = 6, height = 4, dpi = 500, scale = 1.75)
