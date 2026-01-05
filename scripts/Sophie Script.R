@@ -18,24 +18,57 @@ library("stringr")
 library("ggpattern")
 
 #####Instruments#####
-Here is some code to access the updated index data straight from the drive. As you run it, be sure to follow the instructions popping up in your console to make sure you link your Google account!
-  
-  
-  # load libraries
-  library(googledrive)
-
-# read in data
-index_data_file <- drive_download(as_id("1ltFtDnOoMwLNBFVaQpp--U4_WzvAULDo"), path = tempfile(fileext = ".csv"))
-
-index_data <- read_csv(index_data_file$local_path)
-
-# clean up environment
-rm(index_data_file)
+kelp_index_combined_sensor_data_2025_12_17 <- read_csv("~/Desktop/PSRF-R Work/kelp_index_combined_sensor_data_2025-12-17.csv")
+View(kelp_index_combined_sensor_data_2025_12_17)
 #####Temperature of all selected sites 2024-2025 (SURFACE)#####
+all_site_temp<-subset(kelp_index_combined_sensor_data_2025_12_17, select = c(site, position, datetime, temp_logger_id, tidbit_temp_c, ph_temp_c))
+View(all_site_temp)
 
+all_site_temp_surface<-all_site_temp %>%
+  filter(position %in% c("surface"))%>%
+  filter(site %in% c("centennialpark", "wingpoint", "edmonds", "jeffersonhead"))
 
 #####Temperature of all selected sites  2024-2025 (BOTTOM)#####
+all_site_temp<-subset(kelp_index_combined_sensor_data_2025_12_17, select = c(site, position, datetime, temp_logger_id, tidbit_temp_c, ph_temp_c))
+#View(all_site_temp)
 
+all_site_temp_bottom<-all_site_temp %>%
+  filter(position %in% c("bottom"))%>%
+  filter(site %in% c("centennialpark", "wingpoint", "edmonds", "jeffersonhead"))
+
+#View(all_site_temp_bottom)
+
+daily_temp_bottom <- all_site_temp_bottom %>%
+  mutate(date = as.Date(datetime)) %>%
+  group_by(site, date) %>%
+  summarise(
+    daily_avg_temp = mean(ph_temp_c, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+View(daily_temp_bottom)
+
+daily_temp_bottom<- daily_temp_bottom %>%
+  filter(date>=as.Date("2024-09-18"),
+         date<=as.Date("2025-12-30"))
+
+#plot#
+
+
+# Plot with custom colors
+ggplot(daily_temp_bottom, aes(x = date, y = daily_avg_temp, color = site)) +
+  geom_line(size = 1) +
+  labs(
+    title = "Daily Average Bottom Temperature by Site",
+    x = "Date",
+    y = "Temperature (°C)",
+    color = "Site"
+  ) +
+  scale_color_manual(values = c("centennialpark"="red", "wingpoint"="blue", "jeffersonhead"="green", "edmonds"="purple")) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
 
 
 #####Dissolved Oxygen of all selected sites 2025 (SURFACE)#####
@@ -310,3 +343,4 @@ ggplot(yearly_comparison_all,
                                   fill = "white",
                                   color = "black")))+
   coord_flip()
+ 
