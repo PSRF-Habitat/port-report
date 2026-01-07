@@ -1,4 +1,5 @@
 ##Port of Seattle Report##
+#Users/sophieschwager/2025/port-report#
 #install packages#
 install.packages("tidyverse")
 install.packages("ggplot2")
@@ -413,7 +414,7 @@ ggplot(yearly_comparison_kelp_CP,
         ),
     position = position_dodge(width = 0.9, reverse = TRUE), # MK trying a different dodge function
     width = 0.2) +
-  scale_fill_manual(values=c("2024" = "chartreuse4", "2025" = "chartreuse2")) +
+  scale_fill_manual(values=c("2024" = "#66B2FF", "2025" = "#B8E39B")) +
   scale_pattern_manual(values = c("Deep" = "stripe", "Shallow" = "none")) +
   ylab(bquote(Density (m^-2))) +
   theme_minimal() +
@@ -537,7 +538,7 @@ ggplot(yearly_comparison_all,
        ),
     position = position_dodge(width=.9, reverse = TRUE),
    width = 0.2) +  
-  scale_fill_manual(values=c("2024" = "chartreuse4", "2025" = "chartreuse2")) +
+  scale_fill_manual(values=c("2024" = "#66B2FF", "2025" = "#B8E39B")) +
   scale_pattern_manual(values = c("Deep" = "stripe", "Shallow" = "none")) +
   ylab(bquote(Density (m^-2))) +
   facet_wrap(~ site_name, ncol = 3)+
@@ -581,3 +582,49 @@ ggplot(yearly_comparison_all,
 
 ##
 ggsave('~/Desktop/PSRF-R Work/Kelp at All Sites.PNG', width = 6, height = 5, dpi = 500)
+
+
+
+
+
+############tables#######
+daily_avg_high_low_surface_temp <- daily_temp_surface %>%
+  group_by(site) %>%
+  summarise(
+    avg_high = max(daily_avg_temp_sur, na.rm = TRUE),
+    avg_high_date = date[which.max(daily_avg_temp_sur)],
+    avg_low = min(daily_avg_temp_sur, na.rm = TRUE),
+    avg_low_date = date[which.min(daily_avg_temp_sur)],
+    .groups = "drop")
+write_csv(daily_avg_high_low_surface_temp, "daily_avg_high_low_surface_temp.csv")
+
+
+daily_avg_high_low_bottom_temp <- daily_temp_bottom %>%
+  group_by(site) %>%
+  summarise(
+    avg_high = max(daily_avg_temp, na.rm = TRUE),
+    avg_high_date = date[which.max(daily_avg_temp)],
+    avg_low = min(daily_avg_temp, na.rm = TRUE),
+    avg_low_date = date[which.min(daily_avg_temp)],
+    .groups = "drop")
+write_csv(daily_avg_high_low_bottom, "daily_avg_high_low_bottom_temp.csv")
+
+daily_avg_high_low_bottom_do <- daily_do_bottom %>%
+  group_by(site) %>%
+  summarise(
+    avg_high = max(daily_avg_do, na.rm = TRUE),
+    avg_high_date = date[which.max(daily_avg_do)],
+    avg_low = min(daily_avg_do, na.rm = TRUE),
+    avg_low_date = date[which.min(daily_avg_do)],
+    .groups = "drop")
+write_csv(daily_avg_high_low_bottom_do, "daily_avg_high_low_bottom_DO.csv")
+
+daily_avg_high_low_surface_do <- daily_do_surface %>%
+  group_by(site) %>%
+  summarise(
+    avg_high = max(daily_avg_do_sur, na.rm = TRUE),
+    avg_high_date = date[which.max(daily_avg_do_sur)],
+    avg_low = min(daily_avg_do_sur, na.rm = TRUE),
+    avg_low_date = date[which.min(daily_avg_do_sur)],
+    .groups = "drop")
+write_csv(daily_avg_high_low_surface_do, "daily_avg_high_low_surface_DO.csv")
