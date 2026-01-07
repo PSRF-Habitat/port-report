@@ -4,10 +4,9 @@ format: html
 editor: visual
 ---
 
-Let's try first copying everything from last year, and just adding a 5th color to the gradient and the new data to the csv...
-This first segment is for the bulb count graph
+Let's try first copying everything from last year, and just adding a 5th color to the gradient and the new data to the csv... This first segment is for the bulb count graph
 
-EDIT: OK SO IT WORKED PERFECTLY. LETS GO! 
+EDIT: OK SO IT WORKED PERFECTLY. LETS GO!
 
 ```{r}
 library(dplyr)
@@ -20,7 +19,7 @@ library(tidyverse)
 
 bulb_counts <- read_csv("C:/R Projects/2025/port-report/data/POSKelp_LinearExtent2025.csv")
 
-correct_order <- c("Magnolia", "Elliot Bay Marina Breakwater", "Centennial Park", 
+correct_order <- c("Magnolia", "Elliott Bay Marina Breakwater", "Centennial Park", 
                    "Piers 59 - 70", "Jack Perry Park", "Jack Block Park", "Terminal 7", 
                    "SW Spokane St./Terminal 25", "Pier 30")
 
@@ -122,7 +121,6 @@ grid.draw(g)
 ggsave("C:/R Projects/2025/port-report/figures/BulbCount_Plot_incl2025.png",g, width=3,height=4, dpi = 500, scale = 1.75)
 ```
 
-
 Fingers crossed it works just as well for this below, the shoreline extent version!
 
 EDIT: Aaaannnnnd that worked perfectly too... job done?
@@ -139,7 +137,7 @@ library(tidyverse)
 bulb_counts <- read_csv("C:/R Projects/2025/port-report/data/POSKelp_LinearExtent2025.csv")
 
 # Set the correct order for the data
-correct_order <- c("Magnolia", "Elliot Bay Marina Breakwater", "Centennial Park", 
+correct_order <- c("Magnolia", "Elliott Bay Marina Breakwater", "Centennial Park", 
                    "Piers 59 - 70", "Jack Perry Park", "Jack Block Park", "Terminal 7", 
                    "SW Spokane St./Terminal 25", "Pier 30")
 
@@ -243,4 +241,3 @@ grid.draw(g)
 
 ggsave("C:/R Projects/2025/port-report/figures/KelpShorelineExtent_Plot_incl2025.png",g, width=3,height=4, dpi = 500, scale = 1.75)
 ```
-
