@@ -202,12 +202,12 @@ RCF_CP_LD <- ggplot(CP_fish_stratum_lowDensity,
                                 fill = "white",
                                 color = "black"
                               ))) +
-  scale_x_continuous(expand=c(0,0, 0.05, 0),limits = c(-.05,2.25), breaks=seq(0,2.25,by=.5)) +
+  scale_x_continuous(expand=c(0,0, 0.05, 0),limits = c(-.05,2.35), breaks=seq(0,2.35,by=.5)) +
   scale_y_discrete(
     limits = rev(sort(unique(CP_fish_stratum_lowDensity$species))),  # Reverse alphabetical order
     labels = function(y) str_wrap(y, width = 11),
     expand = expansion(add = .66)) +
-  coord_cartesian(xlim = c(-.05, 2.25))  #so error bars don't go below 0
+  coord_cartesian(xlim = c(-.05, 2.35))  #so error bars don't go below 0
 
 ggsave("C:/R Projects/2025/port-report/figures/ReefCheckFish_CPonly_lowDensity.png",RCF_CP_LD, width=4,height=3, dpi = 500, scale = 1.75)
 ```
@@ -290,8 +290,166 @@ RCF_CP_HD <- ggplot(CP_fish_stratum_perchAndFGF,
 ggsave("C:/R Projects/2025/port-report/figures/ReefCheckFish_CPonly_highDensity.png",RCF_CP_HD, width=4,height=3, dpi = 500, scale = 1.75)
 ```
 
+low density fish plot (amounts, not density this time)
+```{r}
+RCF_CP_LC <- ggplot(CP_fish_stratum_lowDensity, 
+       aes(y=species, x=stratum_amount, 
+           fill=factor(year), 
+           pattern = depth_stratum)) + 
+    geom_vline(xintercept = 0, 
+             color = "gray", 
+             linetype = "solid", 
+             linewidth = 0.5) +
+  geom_bar_pattern(
+    stat= "identity",
+    position = position_dodge(width = .9, reverse=TRUE),
+    color = "black",
+    width = .9,
+    pattern_fill = "black",
+    pattern_density = 0.1,
+    pattern_spacing = 0.02,
+    pattern_angle = 45) +
+  #geom_errorbar(
+  #  aes(xmin = pmax(stratum_density-transect_sd,0), xmax =stratum_density+transect_sd, 
+                #group = interaction(depth_stratum, year)
+  #      ),
+  #  position = position_dodge(width=.9, reverse=TRUE),
+  #  width = 0.2) +
+  scale_fill_manual(values=c("2024" = "#66B2FF", "2025" = "#B8E39B")) +
+  scale_pattern_manual(values = c("deep" = "stripe", "shallow" = "none")) +
+  theme_minimal() +
+  theme(panel.grid.major.x = element_line(color="gray", linewidth = 0.25),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        panel.border = element_rect(color="black",
+                                  fill=NA,
+                                  size = 1),
+        legend.position = c(0.99,0.35),
+        legend.justification = c(1,0),
+        legend.background = element_rect(fill = "white", color = NA),
+        legend.margin = margin(4,4,4,4),
+        # Increase legend text and key size
+        legend.text = element_text(size = 10),          # Larger legend text
+        legend.title = element_text(size = 11),         # Larger legend title
+        legend.key.size = unit(1, "lines"),           # Larger legend keys
+        legend.key.height = unit(0.8, "lines"),         # Adjust the height of legend keys (if necessary)
+        legend.key.width = unit(1, "lines"),
+        axis.title.y = element_text(size = 12),         # Larger x-axis label
+        axis.title.x = element_text(size = 12),         # Larger y-axis label
+        axis.text.y = element_text(size = 10),  # Larger x-axis tick labels
+        axis.text.x = element_text(lineheight = 0.8, size = 10)) +       # Larger y-axis tick labels)
+  #geom_hline(yintercept = seq(0.5, length(unique(CP_fish_stratum_lowDensity$species)) - 0.5, by = 1), 
+  #           color = "gray", 
+  #           linetype = "solid", 
+  #           linewidth = 0.5) +
+
+  labs(y="Species", x="Total Observations") +
+  guides(fill = guide_legend(title = "Year", order = 1,
+                             override.aes = (list(
+                               pattern = "none",
+                               pattern_Density = 0,
+                               pattern_fill = NA,
+                               pattern_Spacing = 0,
+                               pattern_angle = 0,
+                               color = "black"))),
+       pattern = guide_legend(title = "Depth Strata", order = 2,
+                              override.aes = list(
+                                fill = "white",
+                                color = "black"
+                              ))) +
+  scale_x_continuous(expand=c(0,0, 0.05, 0),limits = c(-.25,9.5), breaks=seq(0,9.5,by=2)) +
+  scale_y_discrete(
+    limits = rev(sort(unique(CP_fish_stratum_lowDensity$species))),  # Reverse alphabetical order
+    labels = function(y) str_wrap(y, width = 11),
+    expand = expansion(add = .66)) +
+  coord_cartesian(xlim = c(-.25, 9.5))  #so error bars don't go below 0
+
+ggsave("C:/R Projects/2025/port-report/figures/ReefCheckFish_CPonly_lowCounts.png",RCF_CP_LC, width=4,height=3, dpi = 500, scale = 1.75)
+```
+
+high density fish plot (amounts, not density)
+```{r}
+RCF_CP_HC <- ggplot(CP_fish_stratum_perchAndFGF, 
+       aes(y=species, x=stratum_amount, 
+           fill=factor(year), 
+           pattern = depth_stratum)) +
+    geom_vline(xintercept = 0, 
+             color = "gray", 
+             linetype = "solid", 
+             linewidth = 0.5) +
+  geom_bar_pattern(
+    stat= "identity",
+    position = position_dodge(width = .9, reverse=TRUE),
+    color = "black",
+    width = .9,
+    pattern_fill = "black",
+    pattern_density = 0.1,
+    pattern_spacing = 0.02,
+    pattern_angle = 45) +
+  #geom_errorbar(
+  #  aes(xmin = pmax(stratum_density-transect_sd,0), xmax =stratum_density+transect_sd, 
+  #              #group = interaction(depth_stratum, year)
+  #      ),
+  #  position = position_dodge(width=.9, reverse=TRUE),
+  #  width = 0.2) +
+  scale_fill_manual(values=c("2024" = "#66B2FF", "2025" = "#B8E39B")) +
+  scale_pattern_manual(values = c("deep" = "stripe", "shallow" = "none")) +
+  theme_minimal() +
+   theme(panel.grid.major.x = element_line(color="gray", linewidth = 0.25),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        panel.border = element_rect(color="black",
+                                  fill=NA,
+                                  size = 1),
+        legend.position = c(0.99,0.35),
+        legend.justification = c(1,0),
+        legend.background = element_rect(fill = "white", color = NA),
+        legend.margin = margin(4,4,4,4),# Increase legend text and key size
+        legend.text = element_text(size = 10),          # Larger legend text
+        legend.title = element_text(size = 11),         # Larger legend title
+        legend.key.size = unit(1, "lines"),           # Larger legend keys
+        legend.key.height = unit(0.8, "lines"),         # Adjust the height of legend keys (if necessary)
+        legend.key.width = unit(1, "lines"),
+        axis.title.y = element_text(size = 12),         # Larger x-axis label
+        axis.title.x = element_text(size = 12),         # Larger y-axis label
+        axis.text.y = element_text(size = 10),  # Larger x-axis tick labels
+        axis.text.x = element_text(lineheight = 0.8, size = 10)) +       # Larger y-axis tick labels)
+  #geom_hline(yintercept = seq(0.5, length(unique(CP_fish_stratum_perchAndFGF$species)) - 0.5, by = 1), 
+  #           color = "gray", 
+  #           linetype = "solid", 
+  #           linewidth = 0.5) +
+
+  labs(y="Species", x="Total Observations") +
+  guides(fill = guide_legend(title = "Year", order = 1,
+                             override.aes = (list(
+                               pattern = "none",
+                               pattern_Density = 0,
+                               pattern_fill = NA,
+                               pattern_Spacing = 0,
+                               pattern_angle = 0,
+                               color = "black"))),
+       pattern = guide_legend(title = "Depth Strata", order = 2,
+                              override.aes = list(
+                                fill = "white",
+                                color = "black"
+                              ))) +
+  scale_x_continuous(expand=c(0,0, 0.05, 0),limits = c(-5,175), breaks=seq(0,175,by=40)) +
+  scale_y_discrete(
+    limits = rev(sort(unique(CP_fish_stratum_perchAndFGF$species))),  # Reverse alphabetical order
+    labels = function(y) str_wrap(y, width = 8),
+    expand = expansion(add = .6)) +
+  coord_cartesian(xlim = c(-5, 190))  #so error bars don't go below 0
+
+ggsave("C:/R Projects/2025/port-report/figures/ReefCheckFish_CPonly_highCounts.png",RCF_CP_HC, width=4,height=3, dpi = 500, scale = 1.75)
+```
 
 
+
+
+
+extra stuff for now...
 ```{r}
 #assiging depth strata to transects
 working_fish_data <- select_fish_data %>%
