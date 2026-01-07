@@ -58,11 +58,27 @@ ggplot() +
     size = 1.3   # optional: slightly thicker
   ) +
   labs(
-    title = "Daily Average Surface Temperature by Site",
     x = "Date",
     y = "Temperature (°C)",
     color = "Site"
   ) +
+  theme_minimal() +
+  theme(panel.border=element_rect(color="black",
+                                  fill=NA,
+                                  size = 1),
+        panel.grid.major = element_line(color = "gray", size = 0.5),  # Major grid lines
+        panel.grid.minor = element_line(color = "lightgray", size = 0.25),  # Minor grid lines
+        axis.title.x = element_text(margin = margin(t = 10)),
+        legend.position = c(0.95,0.03),
+        legend.justification = c(1,0),
+        legend.background = element_rect(fill = alpha("white",0.7), color = NA),
+        legend.margin = margin(5, 5, 5, 5), # Increase legend text and key size
+        legend.text = element_text(size = 10),          # Larger legend text
+        legend.title = element_text(size = 12),         # Larger legend title
+        legend.key.size = unit(2, "lines"),           # Larger legend keys
+        legend.key.height = unit(1.0, "lines"),         # Adjust the height of legend keys (if necessary)
+        legend.key.width = unit(1, "lines"),
+        text = element_text(size=14))+
   scale_color_manual(
     values = c(
       "edmonds" = "#6BAED6",
@@ -74,25 +90,8 @@ ggplot() +
       "centennialpark" = "Centennial Park",
       "jeffersonhead" = "Jefferson Head",
       "edmonds" = "Edmonds",
-      "wingpoint" = "Wing Point"))+
-  theme_minimal() +
-  theme(panel.border=element_rect(color="black",
-                                  fill=NA,
-                                  size = 1),
-        panel.grid.major = element_line(color = "gray", size = 0.5),  # Major grid lines
-        panel.grid.minor = element_line(color = "lightgray", size = 0.25),  # Minor grid lines
-        axis.title.x = element_text(margin = margin(t = 10)),
-        legend.position = c("right"),
-        legend.justification = c("center"),
-        legend.background = element_rect(fill = "white", color = NA),
-        legend.margin = margin(5, 5, 5, 5), # Increase legend text and key size
-        legend.text = element_text(size = 13),          # Larger legend text
-        legend.title = element_text(size = 13),         # Larger legend title
-        legend.key.size = unit(2, "lines"),           # Larger legend keys
-        legend.key.height = unit(1.2, "lines"),         # Adjust the height of legend keys (if necessary)
-        legend.key.width = unit(2, "lines"),
-        text = element_text(size=14))
-
+      "wingpoint" = "Wing Point"))
+ggsave('~/Desktop/PSRF-R Work/Surface temp.PNG', width = 6, height = 5, dpi = 500)
 
 #####Temperature of all selected sites  2024-2025 (BOTTOM)#####
 all_site_temp<-subset(kelp_index_combined_sensor_data_2025_12_17, select = c(site, position, datetime, temp_logger_id, tidbit_temp_c, ph_temp_c, wl_temp_c))
@@ -105,6 +104,7 @@ all_site_temp_bottom<-all_site_temp %>%
 #View(all_site_temp_bottom)
 
 daily_temp_bottom <- all_site_temp_bottom %>%
+  filter(ph_temp_c<=16 | is.na(ph_temp_c))%>%
   mutate(date = as.Date(datetime)) %>%
   group_by(site, date) %>%
   summarise(
@@ -135,7 +135,6 @@ ggplot() +
     size = 1.3   # optional: slightly thicker
   ) +
   labs(
-    title = "Daily Average Bottom Temperature by Site",
     x = "Date",
     y = "Temperature (°C)",
     color = "Site"
@@ -159,18 +158,18 @@ ggplot() +
         panel.grid.major = element_line(color = "gray", size = 0.5),  # Major grid lines
         panel.grid.minor = element_line(color = "lightgray", size = 0.25),  # Minor grid lines
         axis.title.x = element_text(margin = margin(t = 10)),
-        legend.position = c("right"),
-        legend.justification = c("center"),
-        legend.background = element_rect(fill = "white", color = NA),
+        legend.position = c(0.95,0.03),
+        legend.justification = c(1,0),
+        legend.background = element_rect(fill = alpha("white",0.7), color = NA),
         legend.margin = margin(5, 5, 5, 5), # Increase legend text and key size
-        legend.text = element_text(size = 13),          # Larger legend text
-        legend.title = element_text(size = 13),         # Larger legend title
+        legend.text = element_text(size = 10),          # Larger legend text
+        legend.title = element_text(size = 12),         # Larger legend title
         legend.key.size = unit(2, "lines"),           # Larger legend keys
-        legend.key.height = unit(1.2, "lines"),         # Adjust the height of legend keys (if necessary)
-        legend.key.width = unit(2, "lines"),
+        legend.key.height = unit(1.0, "lines"),         # Adjust the height of legend keys (if necessary)
+        legend.key.width = unit(1, "lines"),
         text = element_text(size=14))
 
- 
+ggsave('~/Desktop/PSRF-R Work/Bottom temp.PNG', width = 6, height = 5, dpi = 500) 
 
 
 #####Dissolved Oxygen of all selected sites 2025 (SURFACE)#####
@@ -206,9 +205,8 @@ ggplot() +
     size = 1.3   # optional: slightly thicker
   ) +
   labs(
-    title = "Daily Average Surface Dissolved Oxygen by Site",
     x = "Date",
-    y = "Temperature (°C)",
+    y = "Dissolved Oxygen (mg/L)",
     color = "Site"
   ) +
   scale_color_manual(
@@ -232,18 +230,18 @@ ggplot() +
         panel.grid.major = element_line(color = "gray", size = 0.5),  # Major grid lines
         panel.grid.minor = element_line(color = "lightgray", size = 0.25),  # Minor grid lines
         axis.title.x = element_text(margin = margin(t = 10)),
-        legend.position = c("right"),
-        legend.justification = c("center"),
-        legend.background = element_rect(fill = "white", color = NA),
+        legend.position = c(0.95,0.65),
+        legend.justification = c(1,0),
+        legend.background = element_rect(fill = alpha("white",0.7), color = NA),
         legend.margin = margin(5, 5, 5, 5), # Increase legend text and key size
-        legend.text = element_text(size = 13),          # Larger legend text
-        legend.title = element_text(size = 13),         # Larger legend title
+        legend.text = element_text(size = 10),          # Larger legend text
+        legend.title = element_text(size = 12),         # Larger legend title
         legend.key.size = unit(2, "lines"),           # Larger legend keys
-        legend.key.height = unit(1.2, "lines"),         # Adjust the height of legend keys (if necessary)
-        legend.key.width = unit(2, "lines"),
+        legend.key.height = unit(1.0, "lines"),         # Adjust the height of legend keys (if necessary)
+        legend.key.width = unit(1, "lines"),
         text = element_text(size=14))
 
-
+ggsave('~/Desktop/PSRF-R Work/Surface DO.PNG', width = 6, height = 5, dpi = 500)
 
 #####Dissolved Oxygen of all selected sited 2025 (BOTTOM)#####
 all_site_do_bottom<-all_site_DO %>%
@@ -261,7 +259,7 @@ daily_do_bottom <- all_site_do_bottom %>%
 daily_do_bottom<- daily_do_bottom %>%
   filter(date>=as.Date("2024-12-13"),
          date<=as.Date("2025-12-30"))
-
+View(daily_do_bottom)
 ##plot bottom do##
 ggplot() +
   geom_line(
@@ -275,9 +273,8 @@ ggplot() +
     size = 1.3   # optional: slightly thicker
   ) +
   labs(
-    title = "Daily Average Bottom Dissolved Oxygen by Site",
     x = "Date",
-    y = "Temperature (°C)",
+    y = "Dissolved Oxygen (mg/L)",
     color = "Site"
   ) +
   scale_color_manual(
@@ -301,17 +298,18 @@ ggplot() +
         panel.grid.major = element_line(color = "gray", size = 0.5),  # Major grid lines
         panel.grid.minor = element_line(color = "lightgray", size = 0.25),  # Minor grid lines
         axis.title.x = element_text(margin = margin(t = 10)),
-        legend.position = c("right"),
-        legend.justification = c("center"),
-        legend.background = element_rect(fill = "white", color = NA),
+        legend.position = c(0.95,0.65),
+        legend.justification = c(1,0),
+        legend.background = element_rect(fill = alpha("white",0.7), color = NA),
         legend.margin = margin(5, 5, 5, 5), # Increase legend text and key size
-        legend.text = element_text(size = 13),          # Larger legend text
-        legend.title = element_text(size = 13),         # Larger legend title
+        legend.text = element_text(size = 12),          # Larger legend text
+        legend.title = element_text(size = 10),         # Larger legend title
         legend.key.size = unit(2, "lines"),           # Larger legend keys
-        legend.key.height = unit(1.2, "lines"),         # Adjust the height of legend keys (if necessary)
-        legend.key.width = unit(2, "lines"),
+        legend.key.height = unit(1.0, "lines"),         # Adjust the height of legend keys (if necessary)
+        legend.key.width = unit(1, "lines"),
         text = element_text(size=14))
 
+ggsave('~/Desktop/PSRF-R Work/Bottom DO.PNG', width = 6, height = 5, dpi = 500)
 
 #####Kelp#####
 Kelp <- read_csv("data/Kelp.csv")
@@ -402,7 +400,7 @@ ggplot(yearly_comparison_kelp_CP,
            pattern = depth_strata)) + 
   geom_bar_pattern(
     stat= "identity",
-    position = position_dodge(width = 0.9),  # MK trying a different dodge function
+    position = position_dodge(width = 0.9, reverse = TRUE),  # MK trying a different dodge function
     color = "black",
     width = .9,
     pattern_fill = "black",
@@ -413,7 +411,7 @@ ggplot(yearly_comparison_kelp_CP,
     aes(ymin = pmax(total_density-SD,0), ymax =total_density+SD, 
      #   group = interaction(Year, depth_strata)    # MK kind of thinking this is optional and possibly throwing things off
         ),
-    position = position_dodge(width = 0.9), # MK trying a different dodge function
+    position = position_dodge(width = 0.9, reverse = TRUE), # MK trying a different dodge function
     width = 0.2) +
   scale_fill_manual(values=c("2024" = "chartreuse4", "2025" = "chartreuse2")) +
   scale_pattern_manual(values = c("Deep" = "stripe", "Shallow" = "none")) +
@@ -456,7 +454,7 @@ ggplot(yearly_comparison_kelp_CP,
   coord_flip()
 
   
-  
+ggsave('~/Desktop/PSRF-R Work/Kelp at Centennial Park.PNG', width = 6, height = 5, dpi = 500)
   
   
   
@@ -520,13 +518,13 @@ yearly_comparison_all <- yearly_comparison_all %>%
     SD = sd(density))
 
 ##plots##
-AllSite_Kelp<- ggplot(yearly_comparison_all, 
+ggplot(yearly_comparison_all, 
        aes(x=species_group, y=total_density, 
            fill=factor(Year), 
            pattern = depth_strata)) + 
   geom_bar_pattern(
     stat= "identity",
-    position = position_dodge(width = .9),
+    position = position_dodge(width = .9, reverse = TRUE),
     color = "black",
     width = .7,
     pattern_fill = "black",
@@ -537,7 +535,7 @@ AllSite_Kelp<- ggplot(yearly_comparison_all,
     aes(ymin = pmax(total_density-SD,0), ymax =total_density+SD, 
        #group = interaction(depth_strata, Year)
        ),
-    position = position_dodge(width=.9),
+    position = position_dodge(width=.9, reverse = TRUE),
    width = 0.2) +  
   scale_fill_manual(values=c("2024" = "chartreuse4", "2025" = "chartreuse2")) +
   scale_pattern_manual(values = c("Deep" = "stripe", "Shallow" = "none")) +
@@ -582,5 +580,4 @@ AllSite_Kelp<- ggplot(yearly_comparison_all,
  
 
 ##
-ggsave('C:/2025/port-report/figures/ KelpAllSites.jpg', 
-       width = 6, height = 4, dpi = 500, scale = 1.75)
+ggsave('~/Desktop/PSRF-R Work/Kelp at All Sites.PNG', width = 6, height = 5, dpi = 500)
