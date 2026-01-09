@@ -101,36 +101,39 @@ yearly_comparison_clean <- transect_grid %>%
 
 ```{r}
 #calculating SD and Density (per depth strata, hence the 180)
-compiled_yearly_comparison <- yearly_comparison_clean %>%    
+yearly_comparison_clean <- yearly_comparison_clean %>% 
+  mutate(
+    density = amount / 60)
+
+compiled_yearly_comparison <- yearly_comparison_clean %>%   
   group_by(species, depth_strata, Year) %>% 
   summarise(
     total_amount = sum(amount),
-    SD = sd(amount),
-    density = total_amount / 180)
-
+    total_density = sum(density) / 3,
+    SD = sd(density))
 ```
 
 *Plotting inverts side-by-side for strata and including 2024 & 2025 data!*
 
 ```{r}
 ggplot(compiled_yearly_comparison, 
-       aes(x=species, y=density, 
+       aes(x=species, y=total_density, 
            fill=factor(Year), 
            pattern = depth_strata)) + 
   geom_bar_pattern(
     stat= "identity",
-    position = position_dodge2(width = 0.9, padding = 0.1, preserve = "single"),
+    position = position_dodge(width = 0.9), #, padding = 0.1, preserve = "single"),
     color = "black",
     width = 0.7,
     pattern_fill = "black",
     pattern_density = 0.2,
     pattern_spacing = 0.02,
     pattern_angle = 45) +
-  #geom_errorbar(
-    #aes(ymin = pmax(density-SD,0), ymax =density+SD, 
+  geom_errorbar(
+    aes(ymin = pmax(total_density-SD,0), ymax =total_density+SD), 
                 #group = interaction(depth_strata, Year)),
-    #position = position_dodge2(width=0.9, padding = 0.1, preserve = "single"),
-    #width = 0.2) +
+    position = position_dodge(width=0.9), #, padding = 0.1, preserve = "single"),
+    width = 0.2) +
   scale_fill_manual(values=c("2024" = "#EC7014", "2025" = "#FEC44F")) +
   scale_pattern_manual(values = c("Deep" = "stripe", "Shallow" = "none")) +
   ylab(bquote(Density (m^-2))) +
@@ -156,13 +159,13 @@ ggplot(compiled_yearly_comparison,
         axis.title.y = element_text(size = 12),         # Larger y-axis label
         axis.text.x = element_text(size = 10),  # Larger x-axis tick labels
         axis.text.y = element_text(lineheight = 0.8, size = 10)) +       # Larger y-axis tick labels)
-  labs(x="Species", y="Density (m^2)") +
+  labs(x="Species", y= expression(Density~(m^-2))) +
   guides(fill = guide_legend(title = "Year", order = 1,
                              override.aes = (list(
                                pattern = "none",
-                               pattern_Density = 0,
+                               pattern_density = 0,
                                pattern_fill = NA,
-                               pattern_Spacing = 0,
+                               pattern_spacing = 0,
                                pattern_angle = 0,
                                color = "black"))),
        pattern = guide_legend(title = "Depth Strata", order = 2,
@@ -173,7 +176,7 @@ ggplot(compiled_yearly_comparison,
   scale_y_continuous(expand=c(0,0),limits = c(0,0.8), breaks=seq(0,.8,by=0.2)) +
   scale_x_discrete(labels = function(x) str_wrap(x, width = 14),
                    expand = expansion(add = 0.3)) +
-  coord_cartesian(ylim = c(0, max(compiled_yearly_comparison$density + compiled_yearly_comparison$SD) * 1.1))  #so error bars don't go below 0
+  coord_cartesian(ylim = c(0, max(compiled_yearly_comparison$total_density + compiled_yearly_comparison$SD) * 1.1)) +  #so error bars don't go below 0
   coord_flip()
 
 
@@ -182,29 +185,28 @@ compiled_yearly_comparisonFILTERED <- compiled_yearly_comparison %>%
   filter(!species %in% c("Mottled Star"))
 
 #splitting species into two groups so the plot is easier to visualize
-compiled_yearly_comparison$size_category <- ifelse(compiled_yearly_comparison$density > 0.1, "Large", "Small")
+compiled_yearly_comparison$size_category <- ifelse(compiled_yearly_comparison$total_density > 0.15, "Large", "Small")
 
  ggplot(compiled_yearly_comparison, 
-       aes(x=species, y=density, 
+       aes(x=species, y=total_density, 
            fill=factor(Year), 
            pattern = depth_strata)) + 
   geom_bar_pattern(
     stat= "identity",
-    position = position_dodge2(width = 0.9, padding = 0.15, preserve = "single"),
+    position = position_dodge(width = 0.9), #padding = 0.15, preserve = "single"),
     color = "black",
     width = 0.85,
     pattern_fill = "black",
     pattern_density = 0.35,
     pattern_spacing = 0.02,
     pattern_angle = 45) +
-  #geom_errorbar(
-    #aes(ymin = pmax(density-SD,0), ymax =density+SD, 
-                #group = interaction(Year, depth_strata)),
-    #position = position_dodge2(width=0.9, padding = 0.15, preserve = "single"),
-    #width = 0.2) +
+  geom_errorbar(
+    aes(ymin = pmax(total_density-SD,0), 
+        ymax = total_density+SD),
+        position = position_dodge(width=0.9),
+        width = 0.2) +
   scale_fill_manual(values=c("2024" = "#EC7014", "2025" = "#FEC44F")) +
   scale_pattern_manual(values = c("Deep" = "stripe", "Shallow" = "none")) +
-  ylab(bquote(Density (m^-2))) +
   theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
         panel.grid.minor.y = element_blank(),
@@ -227,13 +229,13 @@ compiled_yearly_comparison$size_category <- ifelse(compiled_yearly_comparison$de
         axis.title.y = element_text(size = 12),         # Larger y-axis label
         axis.text.x = element_text(size = 10),  # Larger x-axis tick labels
         axis.text.y = element_text(lineheight = 0.8, size = 10)) +       # Larger y-axis tick labels)
-  labs(x="Species", y="Density (m^2)") +
+  labs(x="Species", y=expression(Density~(m^-2))) +
   guides(fill = guide_legend(title = "Year", order = 1,
                              override.aes = (list(
                                pattern = "none",
-                               pattern_Density = 0,
+                               pattern_density = 0,
                                pattern_fill = NA,
-                               pattern_Spacing = 0,
+                               pattern_spacing = 0,
                                pattern_angle = 0,
                                color = "black"))),
        pattern = guide_legend(title = "Depth Strata", order = 2,
@@ -243,18 +245,22 @@ compiled_yearly_comparison$size_category <- ifelse(compiled_yearly_comparison$de
                               ))) +
    facet_wrap(~size_category, scales = "free_x", ncol = 1) +
    scale_y_continuous(expand=c(0,0),limits = c(0,0.8), breaks=seq(0,.8,by=0.1)) +
-   #scale_x_discrete(labels = function(x) str_wrap(x, width = 12),
-                   #expand = expansion(add = 0.6)) +
    coord_flip()
  
- 
-#############################################################
-#############################################################
-install.packages("pachwork")
+
+```
+
+*Density of invertebrates, BUT with two panels to show high density species and low density species -\> using this for POS report for ease of viewing*
+
+```{r}
+install.packages("patchwork")
 library(patchwork)
 library(grid)
 install.packages("gridExtra")
 library(gridExtra)
+library(ggpattern)
+install.packages("cowplot")
+library(cowplot)
  
 #creating a panel variable
  species_separate <- c("Rock Crab", "Orange Cucumber", "Mottled Star", "Kelp Crab", "Kelp Crab (Juvenile)")
@@ -262,12 +268,12 @@ library(gridExtra)
  compiled_yearly_comparison$panel <- ifelse(
    compiled_yearly_comparison$species %in% species_separate,
    "High Density Species",
-   "All Other Species")
+   "Other Species")
  
  compiled_yearly_comparison$panel <- factor(
    compiled_yearly_comparison$panel,
    levels = c("High Density Species",
-              "All Other Species")
+              "Other Species")
  )
  
  #breaking things into two plots and then putting back together
@@ -275,56 +281,52 @@ library(gridExtra)
                                                panel == "High Density Species")
  
  compiled_yearly_comparison_otherspecies <- subset(compiled_yearly_comparison, 
-                                                   panel == "All Other Species")
+                                                   panel == "Other Species")
 
 #create plot for high density species
 high_density_species <- ggplot(
   compiled_yearly_comparison_selected, 
-  aes(x = species, y = density, fill = factor(Year), pattern = depth_strata)) + 
+  aes(x = species, y = total_density, fill = factor(Year), pattern = depth_strata)) +
   geom_bar_pattern(
     stat = "identity",
-    position = position_dodge2(width = 0.9, padding = 0, preserve = "single"),
+    position = position_dodge(width = 0.9, reverse = TRUE), #, padding = 0, preserve = "single"),
     color = "black",
-    width = 0.85,
+    width = 0.9,
     pattern_fill = "black",
     pattern_density = 0.35,
     pattern_spacing = 0.02,
     pattern_angle = 45) +
-  facet_grid(panel~.,
-             scales = "free_y", 
-             space = "free_y") +
-  #geom_errorbar(
-    #aes(ymin = pmax(density - SD, 0), ymax = density + SD, 
-        #group = interaction(Year, depth_strata)),
-    #position = position_dodge2(width=0.9, padding = 0.15, preserve = "single"),
-    #width = 0.2) +
+  geom_errorbar(
+    aes(ymin = pmax(total_density - SD, 0), ymax = total_density + SD),
+    position = position_dodge(width=0.9, reverse = TRUE), #padding = 0.15, preserve = "single"),
+    width = 0.2) +
   scale_fill_manual(values = c("2024" = "#FEC44F", "2025" = "#EC7014")) +
   scale_pattern_manual(values = c("Deep" = "stripe", "Shallow" = "none")) +
-  ylab(bquote(Density (m^-2))) +
-  xlab("Species") +
-  scale_y_continuous(limits = c(0, 0.8), breaks = seq(0,0.8, by = 0.2),
+  labs(x="Species", y=expression(Density~(m^-2))) +
+  scale_y_continuous(breaks = seq(0,1.4, by = 0.2),
                      expand = c(0,0)) +
+  coord_flip(ylim = c(0, 1.4)) +
   scale_x_discrete(labels = function(x) str_wrap(x, width = 12)) +
   theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
         panel.grid.minor.y = element_blank(),
         panel.grid.major.x = element_line(color="gray"),
         panel.grid.minor.x = element_blank(),
-        panel.border = element_rect(color="black", fill=NA, size = 1),
+        panel.border = element_rect(color="black", fill=NA, linewidth = 1),
         axis.text.x = element_text(size = 10),  # Larger x-axis tick labels
         axis.text.y = element_text(lineheight = 0.8, size = 10),  
         axis.title.x = element_blank(),
         axis.title.y = element_blank(),
-        legend.position = "right",
-        strip.text = element_blank()) +
-    coord_flip() +
-  guides(
-    fill = guide_legend(
-      title = "Year",
-      override.aes = list(pattern = "none")),   # remove pattern from fill legend
-    pattern = guide_legend(
-      title = "Depth Strata",
-      override.aes = list(fill = "white")))     # make pattern legend background white
+        legend.position = "none", #so both planels aren't competing for a legend
+        strip.text = element_blank())
+    
+  #guides(
+    #fill = guide_legend(
+     # title = "Year",
+      #override.aes = list(pattern = "none")),   # remove pattern from fill legend
+    #pattern = guide_legend(
+     # title = "Depth Strata",
+      #override.aes = list(fill = "white")))     # make pattern legend background white
 
 print(high_density_species)   
   
@@ -332,44 +334,43 @@ print(high_density_species)
 #create plot for all other species
 all_other_species <- ggplot(
   compiled_yearly_comparison_otherspecies, 
-  aes(x = species, y = density, fill = factor(Year), pattern = depth_strata)) + 
+  aes(x = species, y = total_density, fill = factor(Year), pattern = depth_strata)) + 
   geom_bar_pattern(
     stat = "identity",
-    position = position_dodge2(width = 0.9, padding = 0, preserve = "single"),
+    position = position_dodge(width = 0.9, reverse = TRUE), #padding = 0, preserve = "single"),
     color = "black",
-    width = 0.85,
+    width = 0.9,
     pattern_fill = "black",
     pattern_density = 0.35,
     pattern_spacing = 0.02,
     pattern_angle = 45) +
-  facet_grid(panel~.,
-             scales = "free_y", 
-             space = "free_y") +
-  #geom_errorbar(
-    #aes(ymin = pmax(density - SD, 0), ymax = density + SD, 
-        #group = interaction(Year, depth_strata)),
-    #position = position_dodge2(width=0.9, padding = 0.15, preserve = "single"),
-    #width = 0.2) +
+ geom_errorbar(
+    aes(ymin = pmax(total_density - SD, 0), ymax = total_density + SD),
+    position = position_dodge(width=0.9, reverse = TRUE), #padding = 0.15, preserve = "single"),
+    width = 0.2) +
   scale_fill_manual(values = c("2024" = "#FEC44F", "2025" = "#EC7014")) +
   scale_pattern_manual(values = c("Deep" = "stripe", "Shallow" = "none")) +
-  ylab(bquote(Density (m^-2))) +
-  xlab("Species") +
-  scale_y_continuous(limits = c(0, 0.03), breaks = seq(0,0.03, by = 0.01),
-                     expand = c(0,0)) +
+  labs(x="Species", y=expression(Density~(m^-2))) +
+  scale_y_continuous(
+    breaks = seq(0, max(compiled_yearly_comparison_otherspecies$total_density + compiled_yearly_comparison_otherspecies$SD), by = 0.02),
+    expand = c(0,0)
+  ) +
+  coord_flip(
+    ylim = c(0, max(compiled_yearly_comparison_otherspecies$total_density + compiled_yearly_comparison_otherspecies$SD))
+  ) +
   scale_x_discrete(labels = function(x) str_wrap(x, width = 12)) +
   theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
         panel.grid.minor.y = element_blank(),
         panel.grid.major.x = element_line(color="gray"),
         panel.grid.minor.x = element_blank(),
-        panel.border = element_rect(color="black", fill=NA, size = 1),
+        panel.border = element_rect(color="black", fill=NA, linewidth = 1),
         axis.text.x = element_text(size = 10),  # Larger x-axis tick labels
         axis.text.y = element_text(lineheight = 0.8, size = 10),  
         axis.title.x = element_blank(),
         axis.title.y = element_blank(),
         legend.position = "right", 
         strip.text = element_blank()) +
-    coord_flip() +
   guides(
     fill = guide_legend(
       title = "Year",
@@ -381,23 +382,18 @@ all_other_species <- ggplot(
 print(all_other_species)
 
 # Combine both plots using patchwork
-high_density_species <- high_density_species +
-  theme(
-    axis.title.x = element_blank(),
-    axis.title.y = element_blank()
-  )
-
 yaxis_label <- textGrob("Species", rot = 90, gp = gpar(fontsize = 12))
-xaxis_label <- textGrob("Density~(m^-2)", gp = gpar(fontsize = 12))
+xaxis_label <- textGrob(expression(Density~(m^-2)), gp = gpar(fontsize = 12))
 
 combined_species_density <- (high_density_species / all_other_species) +
   plot_layout(guides = "collect") &
   theme(plot.margin = unit(c(5,5,5,30), "pt"))  # leave space for label
 
 grid.arrange(
-  yaxis_label, combined_species_density, 
+  yaxis_label, 
+  combined_species_density, 
   ncol = 2, 
-  widths = c(0.05, 0.95),
+  widths = c(0.05, 0.96),
   bottom = xaxis_label)
 
 print(combined_species_density)
@@ -407,7 +403,7 @@ ggsave('C:/Users/kari/OneDrive/Data Work/Port of Seattle Report/port-report/figu
 
 ```
 
-*Plotting the density of key kelp grazers at sites throughout the Salish Sea*
+*Plotting the density of key kelp grazers at sites throughout the Salish Sea - comparison*
 
 ```{r}
 inverts_comparison_sites_kelpgrazers <- inverts_comparison_sites %>%
@@ -428,12 +424,6 @@ inverts_comparison_sites_kelpgrazers <- inverts_comparison_sites_kelpgrazers %>%
     transect,
     fill = list(amount = 0))
 
-#density + SD calculations
-#density/60m^2
-inverts_comparison_sites_kelpgrazers <- inverts_comparison_sites_kelpgrazers %>% 
-  mutate(density_60m2 = amount,
-         density_m2 = amount / 60)
-
 #every site, year, transect has all species before calculations
 inverts_comparison_sites_kelpgrazers <- inverts_comparison_sites_kelpgrazers %>%
   group_by(site_name, Year, transect) %>%
@@ -441,38 +431,41 @@ inverts_comparison_sites_kelpgrazers <- inverts_comparison_sites_kelpgrazers %>%
            fill = list(amount = 0, density_60m2 = 0, density_m2 = 0)) %>%
   ungroup()
 
-#mean density and SD by site, year, and species
+#density + SD calculations
+#density/m^2
 inverts_comparison_sites_kelpgrazers <- inverts_comparison_sites_kelpgrazers %>% 
-  group_by(site_name, species, Year) %>%
+  mutate(density_m2 = amount / 60)
+
+
+#mean density and SD by site, year, and species
+inverts_comparison_sites_kelpgrazers <- inverts_comparison_sites_kelpgrazers %>%   
+  group_by(site_name, species, Year) %>% 
   summarise(
-    mean_density_60m2 = mean(density_60m2, na.rm = TRUE),
-    sd_density_60m2 = sd(density_60m2, na.rm = TRUE),
-    mean_density_m2 = mean(density_m2, na.rm = TRUE),
-    sd_density_m2 = sd(density_m2, na.rm = TRUE),
-    n_transects = n(),
-    .groups = "drop")
+    total_amount = sum(amount),
+    total_density = sum(density_m2) / 6,
+    SD = sd(density_m2))
 
 #Plotted density of kelp grazers at sites throughout the Salish Sea
 ggplot(inverts_comparison_sites_kelpgrazers, 
        aes(x = species, 
-           y = mean_density_60m2, 
+           y = total_density, 
            fill = factor(Year))) +
   geom_bar(stat = "identity", position = position_dodge(width = 0.8)) +
   geom_errorbar(aes(
-    ymin = pmax(mean_density_60m2 - sd_density_60m2, 0),
-    ymax = mean_density_60m2 + sd_density_60m2),
+    ymin = pmax(total_density - SD, 0),
+    ymax = total_density + SD),
     width = 0.2,
     position = position_dodge(width = 0.8)) +
   facet_wrap(~ site_name, scales = "free_x") +
   scale_x_discrete(labels = function(x) str_wrap(x, width = 5)) + 
-  scale_fill_manual(values = c("2024" = "gray",
-                               "2025" = "blue")) +
+  scale_fill_manual(values = c("2024" = "#66b2ff",
+                               "2025" = "#b8e39b")) +
   scale_y_continuous(expand = c(0,0), 
-                     limits = c(0,35), 
-                     breaks = seq(0,35, by = 5)) +
+                     limits = c(0,0.65), 
+                     breaks = seq(0,0.65, by = 0.1)) +
   labs(
     x = "Species",
-    y = expression("Density (60m"^-2*")"),
+    y= expression(Observed~Density~(m^-2)),
     fill = "Year"
   ) +
   theme_minimal(base_size = 14) +
@@ -576,15 +569,15 @@ daily_average_pH <- daily_average_pH %>%
 
 #removing rows that have >96 and <96 readings
 daily_average_pH <- daily_average_pH %>% 
-  filter(n == 95)
+  filter(n == 96)
 
 #removing rows that have no associated data
 daily_average_pH <- daily_average_pH %>% 
   filter(!is.nan(mean_pH))
 
-#removing rows with pH >8.5
+#removing rows with pH >9
 daily_average_pH <- daily_average_pH %>% 
-  filter(mean_pH < 8.5)
+  filter(mean_pH < 9)
 
 #making the x-axis of my plot into the annual quarters (Jan, Apl, Jul, Oct)
 quarterly_breaks <- seq(
@@ -603,8 +596,10 @@ ggplot(daily_average_pH,
        aes(x = date, y= mean_pH, color = site)) +
   geom_line(size = 1) +
   geom_point(size = 0.5) +
-  facet_wrap(~position, ncol = 1, scales = "free_y",
-             labeller = as_labeller((c(surface = "Surface", bottom = "Bottom")))) +
+  facet_wrap(~position, 
+             ncol = 1, 
+             scales = "free_y",
+             labeller = as_labeller((c(surface = "Surface pH", bottom = "Bottom pH")))) +
   scale_x_date(
     breaks = quarterly_breaks,
     date_labels="%b-%y") +
@@ -618,6 +613,7 @@ labs(x = "Month-Year",
         panel.grid.major = element_line(color = "gray", size = 0.5),  # Major grid lines
         panel.grid.minor = element_line(color = "lightgray", size = 0.25),  # Minor grid lines
         axis.title.x = element_text(margin = margin(t = 10)),
+        strip.text = element_text(face = "bold"),
         legend.position = c("right"),
         legend.justification = c("center"),
         legend.background = element_rect(fill = "white", color = NA),
@@ -637,18 +633,24 @@ labs(x = "Month-Year",
                                            "edmonds" = "Edmonds",
                                            "wingpoint" = "Wing Point"))
 
+#looking only at the weird Edmonds data
+daily_average_pH_edmonds <- daily_average_pH %>%
+  filter(site == "edmonds")
+
+
 ggsave('C:/Users/kari/OneDrive/Data Work/Port of Seattle Report/port-report/figures/Daily Average pH @ Centennial Park with Site Comparisons 2024-2025.jpg', 
        width = 6, height = 4, dpi = 500, scale = 1.75)
                  
 ```
 
-Conductivity
+Conductivity –\> salinity
 
 ```{r}
 #conductivity daily average surface and bottom
 #converting microsiements to salinity
 install.packages("gsw") #R package for salinity conversion
 library(gsw)
+
 
 #converting microsiements to mS and kpac to dbar
 index_data_final <- index_data_final %>% 
