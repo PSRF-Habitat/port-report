@@ -248,7 +248,6 @@ compiled_yearly_comparison$size_category <- ifelse(compiled_yearly_comparison$to
 *Density of invertebrates, BUT with two panels to show high density species and low density species -\> using this for POS report for ease of viewing*
 
 ```{r}
-library(ggplot2)
 #creating a panel variable
  species_separate <- c("Rock Crab", "Orange Cucumber", "Mottled Star", "Kelp Crab", "Kelp Crab (Juvenile)")
  
@@ -375,6 +374,7 @@ library(ggplot2)
 library(ggpattern)
 library(grid)
 library(gridExtra)
+library(patchwork)
 
 
 #first removing the axis labels/titles
@@ -567,8 +567,8 @@ daily_average_pH <-index_data_final %>%
     n = n(),
     .groups = "drop")
 
-# daily_average_pH <- daily_average_pH %>% 
-#   mutate(year = year(date))
+daily_average_pH <- daily_average_pH %>% 
+   mutate(year = year(date))
 
 #removing rows with pH >9
 daily_average_pH <- daily_average_pH %>%
