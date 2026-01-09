@@ -2,6 +2,8 @@
 title: "Kari's Script"
 format: html
 editor: visual
+editor_options: 
+  chunk_output_type: console
 ---
 
 ## *Here we gooooo....*
@@ -574,9 +576,11 @@ daily_average_pH <- daily_average_pH %>%
 daily_average_pH <- daily_average_pH %>% 
   filter(n == 96)
 
-#removing rows that have no associated data
-daily_average_pH <- daily_average_pH %>% 
-  filter(!is.nan(mean_pH))
+# Filling in complete time series with NA where no data for plot
+daily_average_pH <- daily_average_pH |> 
+  group_by(site, position) |> 
+  complete(date = seq(min(date), max(date), by = "1 day")) |>
+  ungroup()
 
 #removing rows with pH >9
 daily_average_pH <- daily_average_pH %>% 
@@ -589,13 +593,13 @@ quarterly_breaks <- seq(
   by = "3 months")
 
 
-#plotting two pannel plot with surface and bottom position
-#surface on top panel, bottom on bottom panel
+#plotting two panel plot with surface and benthic position
+#surface on top panel, benthic on bottom panel
 daily_average_pH$position <- factor(
   daily_average_pH$position, 
   levels = c("surface", "bottom"))
 
-ggplot(daily_average_pH, 
+ggplot(daily_average_pH,
        aes(x = date, y= mean_pH, color = site)) +
   geom_line(size = 1) +
   geom_point(size = 0.5) +
@@ -675,9 +679,13 @@ daily_average_salinity <- daily_average_salinity %>%
 
 #filling in missing data for sites (even if no associated data) to allow for "pretty" figures
 
+<<<<<<< HEAD
 
 
 #removing rows that have >96 and <96 readings -> each day should have 96 readings (15 minute intervals for data collection)
+=======
+#removing rows that have >96 and <96 readings
+>>>>>>> 030179de4abc228759f12338a50d13c61683c069
 daily_average_salinity <- daily_average_salinity %>% 
   filter(n == 96)
 
