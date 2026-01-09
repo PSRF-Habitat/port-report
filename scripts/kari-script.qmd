@@ -11,14 +11,6 @@ editor: visual
 *Packages to install for this project:*
 
 ```{r}
-install.packages("tidyverse")
-install.packages("ggplot2")
-install.packages("readr")
-install.packages("dplyr")
-install.packages("scales")
-install.packages("lubridate")
-install.packages("stringr")
-install.packages("ggpattern")
 library("tidyverse")
 library("ggplot2")
 library("readr")
@@ -116,7 +108,7 @@ compiled_yearly_comparison <- yearly_comparison_clean %>%
 *Plotting inverts side-by-side for strata and including 2024 & 2025 data!*
 
 ```{r}
-ggplot(compiled_yearly_comparison, 
+yearly_comparison <- ggplot(compiled_yearly_comparison, 
        aes(x=species, y=total_density, 
            fill=factor(Year), 
            pattern = depth_strata)) + 
@@ -179,6 +171,7 @@ ggplot(compiled_yearly_comparison,
   coord_cartesian(ylim = c(0, max(compiled_yearly_comparison$total_density + compiled_yearly_comparison$SD) * 1.1)) +  #so error bars don't go below 0
   coord_flip()
 
+print(yearly_comparison)
 
 #without mottled star
 compiled_yearly_comparisonFILTERED <- compiled_yearly_comparison %>% 
@@ -253,15 +246,7 @@ compiled_yearly_comparison$size_category <- ifelse(compiled_yearly_comparison$to
 *Density of invertebrates, BUT with two panels to show high density species and low density species -\> using this for POS report for ease of viewing*
 
 ```{r}
-install.packages("patchwork")
-library(patchwork)
-library(grid)
-install.packages("gridExtra")
-library(gridExtra)
-library(ggpattern)
-install.packages("cowplot")
-library(cowplot)
- 
+library(ggplot2)
 #creating a panel variable
  species_separate <- c("Rock Crab", "Orange Cucumber", "Mottled Star", "Kelp Crab", "Kelp Crab (Juvenile)")
  
@@ -300,9 +285,10 @@ high_density_species <- ggplot(
     aes(ymin = pmax(total_density - SD, 0), ymax = total_density + SD),
     position = position_dodge(width=0.9, reverse = TRUE), #padding = 0.15, preserve = "single"),
     width = 0.2) +
-  scale_fill_manual(values = c("2024" = "#FEC44F", "2025" = "#EC7014")) +
+  scale_fill_manual(values = c("2024" = "#66b2ff", "2025" = "#b8e39b")) +
   scale_pattern_manual(values = c("Deep" = "stripe", "Shallow" = "none")) +
-  labs(x="Species", y=expression(Density~(m^-2))) +
+  labs(x="Species", 
+       y=expression(Density~(m^-2))) +
   scale_y_continuous(breaks = seq(0,1.4, by = 0.2),
                      expand = c(0,0)) +
   coord_flip(ylim = c(0, 1.4)) +
@@ -315,8 +301,8 @@ high_density_species <- ggplot(
         panel.border = element_rect(color="black", fill=NA, linewidth = 1),
         axis.text.x = element_text(size = 10),  # Larger x-axis tick labels
         axis.text.y = element_text(lineheight = 0.8, size = 10),  
-        axis.title.x = element_blank(),
-        axis.title.y = element_blank(),
+        axis.title.x = element_text(),
+        axis.title.y = element_text(),
         legend.position = "none", #so both planels aren't competing for a legend
         strip.text = element_blank())
     
@@ -348,9 +334,10 @@ all_other_species <- ggplot(
     aes(ymin = pmax(total_density - SD, 0), ymax = total_density + SD),
     position = position_dodge(width=0.9, reverse = TRUE), #padding = 0.15, preserve = "single"),
     width = 0.2) +
-  scale_fill_manual(values = c("2024" = "#FEC44F", "2025" = "#EC7014")) +
+  scale_fill_manual(values = c("2024" = "#66b2ff", "2025" = "#b8e39b")) +
   scale_pattern_manual(values = c("Deep" = "stripe", "Shallow" = "none")) +
-  labs(x="Species", y=expression(Density~(m^-2))) +
+  labs(x="Species", 
+       y=expression(Density~(m^-2))) +
   scale_y_continuous(
     breaks = seq(0, max(compiled_yearly_comparison_otherspecies$total_density + compiled_yearly_comparison_otherspecies$SD), by = 0.02),
     expand = c(0,0)
@@ -367,8 +354,8 @@ all_other_species <- ggplot(
         panel.border = element_rect(color="black", fill=NA, linewidth = 1),
         axis.text.x = element_text(size = 10),  # Larger x-axis tick labels
         axis.text.y = element_text(lineheight = 0.8, size = 10),  
-        axis.title.x = element_blank(),
-        axis.title.y = element_blank(),
+        axis.title.x = element_text(),
+        axis.title.y = element_text(),
         legend.position = "right", 
         strip.text = element_blank()) +
   guides(
@@ -382,18 +369,34 @@ all_other_species <- ggplot(
 print(all_other_species)
 
 # Combine both plots using patchwork
+library(ggplot2)
+library(ggpattern)
+library(grid)
+library(gridExtra)
+
+
+#first removing the axis labels/titles
+remove.titles <- theme(
+  axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+high_density_species <- high_density_species + remove.titles
+all_other_species <- all_other_species + remove.titles
+
+high_density_species <- high_density_species +
+  theme(
+    axis.text.x  = element_blank())
+
 yaxis_label <- textGrob("Species", rot = 90, gp = gpar(fontsize = 12))
 xaxis_label <- textGrob(expression(Density~(m^-2)), gp = gpar(fontsize = 12))
 
-combined_species_density <- (high_density_species / all_other_species) +
-  plot_layout(guides = "collect") &
-  theme(plot.margin = unit(c(5,5,5,30), "pt"))  # leave space for label
+combined_species_density <- (high_density_species / all_other_species) 
 
 grid.arrange(
   yaxis_label, 
   combined_species_density, 
   ncol = 2, 
-  widths = c(0.05, 0.96),
+  widths = c(0.06, 0.94),
   bottom = xaxis_label)
 
 print(combined_species_density)
