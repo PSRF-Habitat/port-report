@@ -642,6 +642,11 @@ daily_average_salinity <-index_data_final %>%
     n = n(),
     .groups = "drop")
 
+# Add in position = bottom for Edmonds NA positions
+# Thinking that bad data from 9/2024 CON6 is the funky one here
+daily_average_salinity <- daily_average_salinity |>
+  mutate(position = if_else(is.na(position), "bottom", position))
+
 daily_average_salinity <- daily_average_salinity %>% 
   mutate(year = year(date))
 
