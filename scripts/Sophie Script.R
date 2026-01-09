@@ -1,4 +1,5 @@
 ##Port of Seattle Report##
+#Users/sophieschwager/2025/port-report#
 #install packages#
 install.packages("tidyverse")
 install.packages("ggplot2")
@@ -21,15 +22,80 @@ library("ggpattern")
 kelp_index_combined_sensor_data_2025_12_17 <- read_csv("~/Desktop/PSRF-R Work/kelp_index_combined_sensor_data_2025-12-17.csv")
 View(kelp_index_combined_sensor_data_2025_12_17)
 #####Temperature of all selected sites 2024-2025 (SURFACE)#####
-all_site_temp<-subset(kelp_index_combined_sensor_data_2025_12_17, select = c(site, position, datetime, temp_logger_id, tidbit_temp_c, ph_temp_c))
+all_site_temp<-subset(kelp_index_combined_sensor_data_2025_12_17, select = c(site, position, datetime, temp_logger_id, tidbit_temp_c, ph_temp_c, wl_temp_c))
 View(all_site_temp)
 
 all_site_temp_surface<-all_site_temp %>%
   filter(position %in% c("surface"))%>%
   filter(site %in% c("centennialpark", "wingpoint", "edmonds", "jeffersonhead"))
 
+View(all_site_temp_surface)
+
+##daily averages#
+daily_temp_surface <- all_site_temp_surface %>%
+  mutate(date = as.Date(datetime)) %>%
+  group_by(site, date) %>%
+  summarise(
+    daily_avg_temp_sur = mean(tidbit_temp_c, na.rm = TRUE),
+    .groups = "drop")
+
+View(daily_temp_surface)
+
+daily_temp_surface<- daily_temp_surface %>%
+  filter(date>=as.Date("2024-09-18"),
+         date<=as.Date("2025-12-30"))
+
+####Plot surface temps##
+
+ggplot() +
+  geom_line(
+    data = subset(daily_temp_surface, site != "centennialpark"),
+    aes(x = date, y = daily_avg_temp_sur, color = site),
+    size = 1
+  ) +
+  geom_line(
+    data = subset(daily_temp_surface, site == "centennialpark"),
+    aes(x = date, y = daily_avg_temp_sur, color = site),
+    size = 1.3   # optional: slightly thicker
+  ) +
+  labs(
+    x = "Date",
+    y = "Temperature (°C)",
+    color = "Site"
+  ) +
+  theme_minimal() +
+  theme(panel.border=element_rect(color="black",
+                                  fill=NA,
+                                  size = 1),
+        panel.grid.major = element_line(color = "gray", size = 0.5),  # Major grid lines
+        panel.grid.minor = element_line(color = "lightgray", size = 0.25),  # Minor grid lines
+        axis.title.x = element_text(margin = margin(t = 10)),
+        legend.position = c(0.95,0.03),
+        legend.justification = c(1,0),
+        legend.background = element_rect(fill = alpha("white",0.7), color = NA),
+        legend.margin = margin(5, 5, 5, 5), # Increase legend text and key size
+        legend.text = element_text(size = 10),          # Larger legend text
+        legend.title = element_text(size = 12),         # Larger legend title
+        legend.key.size = unit(2, "lines"),           # Larger legend keys
+        legend.key.height = unit(1.0, "lines"),         # Adjust the height of legend keys (if necessary)
+        legend.key.width = unit(1, "lines"),
+        text = element_text(size=14))+
+  scale_color_manual(
+    values = c(
+      "edmonds" = "#6BAED6",
+      "wingpoint" = "#74C476",
+      "centennialpark" = "#FEC44F",
+      "jeffersonhead" = "#C994C7"
+    ),
+    labels = c(
+      "centennialpark" = "Centennial Park",
+      "jeffersonhead" = "Jefferson Head",
+      "edmonds" = "Edmonds",
+      "wingpoint" = "Wing Point"))
+ggsave('~/Desktop/PSRF-R Work/Surface temp.PNG', width = 6, height = 5, dpi = 500)
+
 #####Temperature of all selected sites  2024-2025 (BOTTOM)#####
-all_site_temp<-subset(kelp_index_combined_sensor_data_2025_12_17, select = c(site, position, datetime, temp_logger_id, tidbit_temp_c, ph_temp_c))
+all_site_temp<-subset(kelp_index_combined_sensor_data_2025_12_17, select = c(site, position, datetime, temp_logger_id, tidbit_temp_c, ph_temp_c, wl_temp_c))
 #View(all_site_temp)
 
 all_site_temp_bottom<-all_site_temp %>%
@@ -39,43 +105,212 @@ all_site_temp_bottom<-all_site_temp %>%
 #View(all_site_temp_bottom)
 
 daily_temp_bottom <- all_site_temp_bottom %>%
+  filter(ph_temp_c<=16 | is.na(ph_temp_c))%>%
   mutate(date = as.Date(datetime)) %>%
   group_by(site, date) %>%
   summarise(
-    daily_avg_temp = mean(ph_temp_c, na.rm = TRUE),
+    ph_mean = mean(ph_temp_c, na.rm = TRUE),
+    do_mean = mean(wl_temp_c, na.rm = TRUE),
+    daily_avg_temp = mean(c(ph_mean, do_mean), na.rm = TRUE),
     .groups = "drop"
   )
-
 View(daily_temp_bottom)
 
 daily_temp_bottom<- daily_temp_bottom %>%
   filter(date>=as.Date("2024-09-18"),
          date<=as.Date("2025-12-30"))
 
-#plot#
 
 
-# Plot with custom colors
-ggplot(daily_temp_bottom, aes(x = date, y = daily_avg_temp, color = site)) +
-  geom_line(size = 1) +
+
+# Plot with custom colors#
+ggplot() +
+  geom_line(
+    data = subset(daily_temp_bottom, site != "centennialpark"),
+    aes(x = date, y = daily_avg_temp, color = site),
+    size = 1
+  ) +
+  geom_line(
+    data = subset(daily_temp_bottom, site == "centennialpark"),
+    aes(x = date, y = daily_avg_temp, color = site),
+    size = 1.3   # optional: slightly thicker
+  ) +
   labs(
-    title = "Daily Average Bottom Temperature by Site",
     x = "Date",
     y = "Temperature (°C)",
     color = "Site"
   ) +
-  scale_color_manual(values = c("centennialpark"="red", "wingpoint"="blue", "jeffersonhead"="green", "edmonds"="purple")) +
+  scale_color_manual(
+    values = c(
+      "edmonds" = "#08519C",
+      "wingpoint" = "#006D2C",
+      "centennialpark" = "#EC7014",
+      "jeffersonhead" = "#810F7C"
+    ),
+    labels = c(
+      "centennialpark" = "Centennial Park",
+      "jeffersonhead" = "Jefferson Head",
+      "edmonds" = "Edmonds",
+      "wingpoint" = "Wing Point"))+
   theme_minimal() +
-  theme(
-    axis.text.x = element_text(angle = 45, hjust = 1)
-  )
+  theme(panel.border=element_rect(color="black",
+                                  fill=NA,
+                                  size = 1),
+        panel.grid.major = element_line(color = "gray", size = 0.5),  # Major grid lines
+        panel.grid.minor = element_line(color = "lightgray", size = 0.25),  # Minor grid lines
+        axis.title.x = element_text(margin = margin(t = 10)),
+        legend.position = c(0.95,0.03),
+        legend.justification = c(1,0),
+        legend.background = element_rect(fill = alpha("white",0.7), color = NA),
+        legend.margin = margin(5, 5, 5, 5), # Increase legend text and key size
+        legend.text = element_text(size = 10),          # Larger legend text
+        legend.title = element_text(size = 12),         # Larger legend title
+        legend.key.size = unit(2, "lines"),           # Larger legend keys
+        legend.key.height = unit(1.0, "lines"),         # Adjust the height of legend keys (if necessary)
+        legend.key.width = unit(1, "lines"),
+        text = element_text(size=14))
+
+ggsave('~/Desktop/PSRF-R Work/Bottom temp.PNG', width = 6, height = 5, dpi = 500) 
 
 
 #####Dissolved Oxygen of all selected sites 2025 (SURFACE)#####
+all_site_DO<-subset(kelp_index_combined_sensor_data_2025_12_17, select = c(site, position, datetime, do_logger_id, do_conc_mg_per_L))
 
+all_site_do_surface<-all_site_DO %>%
+  filter(position %in% c("surface"))%>%
+  filter(site %in% c("centennialpark", "wingpoint", "edmonds", "jeffersonhead"))
+
+daily_do_surface <- all_site_do_surface %>%
+  filter(do_conc_mg_per_L>=0 | is.na(do_conc_mg_per_L))%>%
+  mutate(date = as.Date(datetime)) %>%
+  group_by(site, date) %>%
+  summarise(
+    daily_avg_do_sur = mean(do_conc_mg_per_L, na.rm = TRUE),
+    .groups = "drop")
+
+View(daily_do_surface)
+
+daily_do_surface<- daily_do_surface %>%
+  filter(date>=as.Date("2024-12-13"),
+         date<=as.Date("2025-12-30"))
+#plot surface do#
+ggplot() +
+  geom_line(
+    data = subset(daily_do_surface, site != "centennialpark"),
+    aes(x = date, y = daily_avg_do_sur, color = site),
+    size = 1
+  ) +
+  geom_line(
+    data = subset(daily_do_surface, site == "centennialpark"),
+    aes(x = date, y = daily_avg_do_sur, color = site),
+    size = 1.3   # optional: slightly thicker
+  ) +
+  labs(
+    x = "Date",
+    y = "Dissolved Oxygen (mg/L)",
+    color = "Site"
+  ) +
+  scale_color_manual(
+    values = c(
+      "edmonds" = "#6BAED6",
+      "wingpoint" = "#74C476",
+      "centennialpark" = "#FEC44F",
+      "jeffersonhead" = "#C994C7"
+    ),
+    labels = c(
+      "centennialpark" = "Centennial Park",
+      "jeffersonhead" = "Jefferson Head",
+      "edmonds" = "Edmonds",
+      "wingpoint" = "Wing Point"
+    )
+  )+
+  theme_minimal() +
+  theme(panel.border=element_rect(color="black",
+                                  fill=NA,
+                                  size = 1),
+        panel.grid.major = element_line(color = "gray", size = 0.5),  # Major grid lines
+        panel.grid.minor = element_line(color = "lightgray", size = 0.25),  # Minor grid lines
+        axis.title.x = element_text(margin = margin(t = 10)),
+        legend.position = c(0.95,0.65),
+        legend.justification = c(1,0),
+        legend.background = element_rect(fill = alpha("white",0.7), color = NA),
+        legend.margin = margin(5, 5, 5, 5), # Increase legend text and key size
+        legend.text = element_text(size = 10),          # Larger legend text
+        legend.title = element_text(size = 12),         # Larger legend title
+        legend.key.size = unit(2, "lines"),           # Larger legend keys
+        legend.key.height = unit(1.0, "lines"),         # Adjust the height of legend keys (if necessary)
+        legend.key.width = unit(1, "lines"),
+        text = element_text(size=14))
+
+ggsave('~/Desktop/PSRF-R Work/Surface DO.PNG', width = 6, height = 5, dpi = 500)
 
 #####Dissolved Oxygen of all selected sited 2025 (BOTTOM)#####
+all_site_do_bottom<-all_site_DO %>%
+  filter(position %in% c("bottom"))%>%
+  filter(site %in% c("centennialpark", "wingpoint", "edmonds", "jeffersonhead"))
 
+daily_do_bottom <- all_site_do_bottom %>%
+  filter(do_conc_mg_per_L>=0 | is.na(do_conc_mg_per_L))%>%
+  mutate(date = as.Date(datetime)) %>%
+  group_by(site, date) %>%
+  summarise(
+    daily_avg_do = mean(do_conc_mg_per_L, na.rm = TRUE),
+    .groups = "drop")
+
+daily_do_bottom<- daily_do_bottom %>%
+  filter(date>=as.Date("2024-12-13"),
+         date<=as.Date("2025-12-30"))
+View(daily_do_bottom)
+##plot bottom do##
+ggplot() +
+  geom_line(
+    data = subset(daily_do_bottom, site != "centennialpark"),
+    aes(x = date, y = daily_avg_do, color = site),
+    size = 1
+  ) +
+  geom_line(
+    data = subset(daily_do_bottom, site == "centennialpark"),
+    aes(x = date, y = daily_avg_do, color = site),
+    size = 1.3   # optional: slightly thicker
+  ) +
+  labs(
+    x = "Date",
+    y = "Dissolved Oxygen (mg/L)",
+    color = "Site"
+  ) +
+  scale_color_manual(
+    values = c(
+      "edmonds" = "#08519C",
+      "wingpoint" = "#006D2C",
+      "centennialpark" = "#EC7014",
+      "jeffersonhead" = "#810F7C"
+    ),
+    labels = c(
+      "centennialpark" = "Centennial Park",
+      "jeffersonhead" = "Jefferson Head",
+      "edmonds" = "Edmonds",
+      "wingpoint" = "Wing Point"
+    )
+  )+
+  theme_minimal() +
+  theme(panel.border=element_rect(color="black",
+                                  fill=NA,
+                                  size = 1),
+        panel.grid.major = element_line(color = "gray", size = 0.5),  # Major grid lines
+        panel.grid.minor = element_line(color = "lightgray", size = 0.25),  # Minor grid lines
+        axis.title.x = element_text(margin = margin(t = 10)),
+        legend.position = c(0.95,0.65),
+        legend.justification = c(1,0),
+        legend.background = element_rect(fill = alpha("white",0.7), color = NA),
+        legend.margin = margin(5, 5, 5, 5), # Increase legend text and key size
+        legend.text = element_text(size = 12),          # Larger legend text
+        legend.title = element_text(size = 10),         # Larger legend title
+        legend.key.size = unit(2, "lines"),           # Larger legend keys
+        legend.key.height = unit(1.0, "lines"),         # Adjust the height of legend keys (if necessary)
+        legend.key.width = unit(1, "lines"),
+        text = element_text(size=14))
+
+ggsave('~/Desktop/PSRF-R Work/Bottom DO.PNG', width = 6, height = 5, dpi = 500)
 
 #####Kelp#####
 Kelp <- read_csv("data/Kelp.csv")
@@ -144,7 +379,7 @@ transect_grid <- transect_grid %>%
 
 
 
-#merging the data with the "mising data" <- fill in the blanks so all transects have all species, even if ZERO were observed for a transect
+#merging the data with the "missing data" <- fill in the blanks so all transects have all species, even if ZERO were observed for a transect
 yearly_comparison_kelp_CP <- transect_grid %>% 
   left_join(yearly_comparison_kelp_CP, by = c("species", "Year", "depth_strata", "transect")) %>% 
   mutate(amount = ifelse(is.na(amount), 0, amount))%>%
@@ -166,7 +401,7 @@ ggplot(yearly_comparison_kelp_CP,
            pattern = depth_strata)) + 
   geom_bar_pattern(
     stat= "identity",
-    position = position_dodge(width = 0.9),  # MK trying a different dodge function
+    position = position_dodge(width = 0.9, reverse = TRUE),  # MK trying a different dodge function
     color = "black",
     width = .9,
     pattern_fill = "black",
@@ -177,9 +412,9 @@ ggplot(yearly_comparison_kelp_CP,
     aes(ymin = pmax(total_density-SD,0), ymax =total_density+SD, 
      #   group = interaction(Year, depth_strata)    # MK kind of thinking this is optional and possibly throwing things off
         ),
-    position = position_dodge(width = 0.9), # MK trying a different dodge function
+    position = position_dodge(width = 0.9, reverse = TRUE), # MK trying a different dodge function
     width = 0.2) +
-  scale_fill_manual(values=c("2024" = "chartreuse4", "2025" = "chartreuse2")) +
+  scale_fill_manual(values=c("2024" = "#66B2FF", "2025" = "#B8E39B")) +
   scale_pattern_manual(values = c("Deep" = "stripe", "Shallow" = "none")) +
   ylab(bquote(Density (m^-2))) +
   theme_minimal() +
@@ -220,7 +455,7 @@ ggplot(yearly_comparison_kelp_CP,
   coord_flip()
 
   
-  
+ggsave('~/Desktop/PSRF-R Work/Kelp at Centennial Park.PNG', width = 6, height = 5, dpi = 500)
   
   
   
@@ -290,7 +525,7 @@ ggplot(yearly_comparison_all,
            pattern = depth_strata)) + 
   geom_bar_pattern(
     stat= "identity",
-    position = position_dodge(width = .9),
+    position = position_dodge(width = .9, reverse = TRUE),
     color = "black",
     width = .7,
     pattern_fill = "black",
@@ -301,9 +536,9 @@ ggplot(yearly_comparison_all,
     aes(ymin = pmax(total_density-SD,0), ymax =total_density+SD, 
        #group = interaction(depth_strata, Year)
        ),
-    position = position_dodge(width=.9),
+    position = position_dodge(width=.9, reverse = TRUE),
    width = 0.2) +  
-  scale_fill_manual(values=c("2024" = "chartreuse4", "2025" = "chartreuse2")) +
+  scale_fill_manual(values=c("2024" = "#66B2FF", "2025" = "#B8E39B")) +
   scale_pattern_manual(values = c("Deep" = "stripe", "Shallow" = "none")) +
   ylab(bquote(Density (m^-2))) +
   facet_wrap(~ site_name, ncol = 3)+
@@ -344,3 +579,52 @@ ggplot(yearly_comparison_all,
                                   color = "black")))+
   coord_flip()
  
+
+##
+ggsave('~/Desktop/PSRF-R Work/Kelp at All Sites.PNG', width = 6, height = 5, dpi = 500)
+
+
+
+
+
+############tables#######
+daily_avg_high_low_surface_temp <- daily_temp_surface %>%
+  group_by(site) %>%
+  summarise(
+    avg_high = max(daily_avg_temp_sur, na.rm = TRUE),
+    avg_high_date = date[which.max(daily_avg_temp_sur)],
+    avg_low = min(daily_avg_temp_sur, na.rm = TRUE),
+    avg_low_date = date[which.min(daily_avg_temp_sur)],
+    .groups = "drop")
+write_csv(daily_avg_high_low_surface_temp, "daily_avg_high_low_surface_temp.csv")
+
+
+daily_avg_high_low_bottom_temp <- daily_temp_bottom %>%
+  group_by(site) %>%
+  summarise(
+    avg_high = max(daily_avg_temp, na.rm = TRUE),
+    avg_high_date = date[which.max(daily_avg_temp)],
+    avg_low = min(daily_avg_temp, na.rm = TRUE),
+    avg_low_date = date[which.min(daily_avg_temp)],
+    .groups = "drop")
+write_csv(daily_avg_high_low_bottom, "daily_avg_high_low_bottom_temp.csv")
+
+daily_avg_high_low_bottom_do <- daily_do_bottom %>%
+  group_by(site) %>%
+  summarise(
+    avg_high = max(daily_avg_do, na.rm = TRUE),
+    avg_high_date = date[which.max(daily_avg_do)],
+    avg_low = min(daily_avg_do, na.rm = TRUE),
+    avg_low_date = date[which.min(daily_avg_do)],
+    .groups = "drop")
+write_csv(daily_avg_high_low_bottom_do, "daily_avg_high_low_bottom_DO.csv")
+
+daily_avg_high_low_surface_do <- daily_do_surface %>%
+  group_by(site) %>%
+  summarise(
+    avg_high = max(daily_avg_do_sur, na.rm = TRUE),
+    avg_high_date = date[which.max(daily_avg_do_sur)],
+    avg_low = min(daily_avg_do_sur, na.rm = TRUE),
+    avg_low_date = date[which.min(daily_avg_do_sur)],
+    .groups = "drop")
+write_csv(daily_avg_high_low_surface_do, "daily_avg_high_low_surface_DO.csv")
