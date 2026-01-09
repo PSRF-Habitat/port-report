@@ -23,6 +23,7 @@ library("stringr")
 library("ggpattern")
 library("googledrive")
 library("googlesheets4")
+library("patchwork")
 ```
 
 *Pulling in the Reef Check data from 2024 and merging to 2025 + removing columns/rows that I don't want to keep - data clean-up*
@@ -372,41 +373,8 @@ print(all_other_species)
 (high_density_species / all_other_species) +
   plot_layout(axis_titles = "collect")
 
-# Combine both plots using patchwork----
-library(ggplot2)
-library(ggpattern)
-library(grid)
-library(gridExtra)
-library(patchwork)
-
-#first removing the axis labels/titles
-remove.titles <- theme(
-  axis.title.x = element_blank(),
-  axis.title.y = element_blank())
-
-high_density_species <- high_density_species + remove.titles
-all_other_species <- all_other_species + remove.titles
-
-high_density_species <- high_density_species +
-  theme(
-    axis.text.x  = element_blank())
-
-yaxis_label <- textGrob("Species", rot = 90, gp = gpar(fontsize = 12))
-xaxis_label <- textGrob(expression(Density~(m^-2)), gp = gpar(fontsize = 12))
-
-combined_species_density <- (high_density_species / all_other_species) 
-
-grid.arrange(
-  yaxis_label, 
-  combined_species_density, 
-  ncol = 2, 
-  widths = c(0.06, 0.94),
-  bottom = xaxis_label)
-
-print(combined_species_density)
-
 ggsave('C:/Users/kari/OneDrive/Data Work/Port of Seattle Report/port-report/figures/Densities of inverts present @ Centennial Park 2024-2025.jpg', 
-       width = 6, height = 4, dpi = 500, scale = 1.75)
+       width = 6, height = 4, dpi = 400, scale = 1.75)
 
 ```
 
@@ -472,7 +440,7 @@ ggplot(inverts_comparison_sites_kelpgrazers,
                      breaks = seq(0,0.65, by = 0.1)) +
   labs(
     x = "Species",
-    y= expression(Observed~Density~(m^-2)),
+    y= expression(Density~(m^-2)),
     fill = "Year"
   ) +
   theme_minimal(base_size = 14) +
@@ -501,7 +469,7 @@ ggplot(inverts_comparison_sites_kelpgrazers,
 
 
 ggsave('C:/Users/kari/OneDrive/Data Work/Port of Seattle Report/port-report/figures/Invertebrate Density Site Comparisons- Kelp Predator Species.jpg', 
-       width = 6, height = 4, dpi = 500, scale = 1.75)
+       width = 6, height = 4, dpi = 400, scale = 1.75)
 
 ```
 
@@ -646,7 +614,7 @@ daily_average_pH_edmonds <- daily_average_pH %>%
 
 
 ggsave('C:/Users/kari/OneDrive/Data Work/Port of Seattle Report/port-report/figures/Daily Average pH @ Centennial Park with Site Comparisons 2024-2025.jpg', 
-       width = 6, height = 4, dpi = 500, scale = 1.75)
+       width = 6, height = 4, dpi = 400, scale = 1.75)
                  
 ```
 
@@ -677,17 +645,16 @@ daily_average_salinity <-index_data_final %>%
 daily_average_salinity <- daily_average_salinity %>% 
   mutate(year = year(date))
 
-#filling in missing data for sites (even if no associated data) to allow for "pretty" figures
-
-<<<<<<< HEAD
-
-
-#removing rows that have >96 and <96 readings -> each day should have 96 readings (15 minute intervals for data collection)
-=======
 #removing rows that have >96 and <96 readings
->>>>>>> 030179de4abc228759f12338a50d13c61683c069
 daily_average_salinity <- daily_average_salinity %>% 
   filter(n == 96)
+
+# Filling in complete time series with NA where no data for plot
+daily_average_salinity <- daily_average_salinity |> 
+  group_by(site, position) |> 
+  complete(date = seq(min(date), max(date), by = "1 day")) |>
+  ungroup()
+
 
 #making the x-axis of my plot into the annual quarters (Jan, Apl, Jul, Oct)
 quarterly_breaks <- seq(
