@@ -2,6 +2,8 @@
 title: "Kari's Script"
 format: html
 editor: visual
+editor_options: 
+  chunk_output_type: console
 ---
 
 ## *Here we gooooo....*
@@ -21,6 +23,7 @@ library("stringr")
 library("ggpattern")
 library("googledrive")
 library("googlesheets4")
+library("patchwork")
 ```
 
 *Pulling in the Reef Check data from 2024 and merging to 2025 + removing columns/rows that I don't want to keep - data clean-up*
@@ -246,7 +249,6 @@ compiled_yearly_comparison$size_category <- ifelse(compiled_yearly_comparison$to
 *Density of invertebrates, BUT with two panels to show high density species and low density species -\> using this for POS report for ease of viewing*
 
 ```{r}
-library(ggplot2)
 #creating a panel variable
  species_separate <- c("Rock Crab", "Orange Cucumber", "Mottled Star", "Kelp Crab", "Kelp Crab (Juvenile)")
  
@@ -368,41 +370,11 @@ all_other_species <- ggplot(
 
 print(all_other_species)
 
-# Combine both plots using patchwork
-library(ggplot2)
-library(ggpattern)
-library(grid)
-library(gridExtra)
-
-
-#first removing the axis labels/titles
-remove.titles <- theme(
-  axis.title.x = element_blank(),
-  axis.title.y = element_blank())
-
-high_density_species <- high_density_species + remove.titles
-all_other_species <- all_other_species + remove.titles
-
-high_density_species <- high_density_species +
-  theme(
-    axis.text.x  = element_blank())
-
-yaxis_label <- textGrob("Species", rot = 90, gp = gpar(fontsize = 12))
-xaxis_label <- textGrob(expression(Density~(m^-2)), gp = gpar(fontsize = 12))
-
-combined_species_density <- (high_density_species / all_other_species) 
-
-grid.arrange(
-  yaxis_label, 
-  combined_species_density, 
-  ncol = 2, 
-  widths = c(0.06, 0.94),
-  bottom = xaxis_label)
-
-print(combined_species_density)
+(high_density_species / all_other_species) +
+  plot_layout(axis_titles = "collect")
 
 ggsave('C:/Users/kari/OneDrive/Data Work/Port of Seattle Report/port-report/figures/Densities of inverts present @ Centennial Park 2024-2025.jpg', 
-       width = 6, height = 4, dpi = 500, scale = 1.75)
+       width = 6, height = 4, dpi = 400, scale = 1.75)
 
 ```
 
@@ -468,7 +440,7 @@ ggplot(inverts_comparison_sites_kelpgrazers,
                      breaks = seq(0,0.65, by = 0.1)) +
   labs(
     x = "Species",
-    y= expression(Observed~Density~(m^-2)),
+    y= expression(Density~(m^-2)),
     fill = "Year"
   ) +
   theme_minimal(base_size = 14) +
@@ -497,7 +469,7 @@ ggplot(inverts_comparison_sites_kelpgrazers,
 
 
 ggsave('C:/Users/kari/OneDrive/Data Work/Port of Seattle Report/port-report/figures/Invertebrate Density Site Comparisons- Kelp Predator Species.jpg', 
-       width = 6, height = 4, dpi = 500, scale = 1.75)
+       width = 6, height = 4, dpi = 400, scale = 1.75)
 
 ```
 
@@ -557,7 +529,6 @@ index_data_final <- index_data_final %>%
 pH
 
 ```{r}
-
 #pH daily average surface and bottom by Site
 daily_average_pH <-index_data_final %>% 
   group_by(site, date, position) %>% 
@@ -567,20 +538,21 @@ daily_average_pH <-index_data_final %>%
     .groups = "drop")
 
 daily_average_pH <- daily_average_pH %>% 
-  mutate(year = year(date))
+   mutate(year = year(date))
 
+#removing rows with pH >9
+daily_average_pH <- daily_average_pH %>%
+  filter(mean_pH < 9)
 
 #removing rows that have >96 and <96 readings
 daily_average_pH <- daily_average_pH %>% 
   filter(n == 96)
 
-#removing rows that have no associated data
-daily_average_pH <- daily_average_pH %>% 
-  filter(!is.nan(mean_pH))
-
-#removing rows with pH >9
-daily_average_pH <- daily_average_pH %>% 
-  filter(mean_pH < 9)
+# Filling in complete time series with NA where no data for plot
+daily_average_pH <- daily_average_pH |> 
+  group_by(site, position) |> 
+  complete(date = seq(min(date), max(date), by = "1 day")) |>
+  ungroup()
 
 #making the x-axis of my plot into the annual quarters (Jan, Apl, Jul, Oct)
 quarterly_breaks <- seq(
@@ -589,20 +561,20 @@ quarterly_breaks <- seq(
   by = "3 months")
 
 
-#plotting two pannel plot with surface and bottom position
-#surface on top panel, bottom on bottom panel
+#plotting two panel plot with surface and benthic position
+#surface on top panel, benthic on bottom panel
 daily_average_pH$position <- factor(
   daily_average_pH$position, 
   levels = c("surface", "bottom"))
 
-ggplot(daily_average_pH, 
+ggplot(daily_average_pH,
        aes(x = date, y= mean_pH, color = site)) +
   geom_line(size = 1) +
   geom_point(size = 0.5) +
   facet_wrap(~position, 
              ncol = 1, 
              scales = "free_y",
-             labeller = as_labeller((c(surface = "Surface pH", bottom = "Bottom pH")))) +
+             labeller = as_labeller((c(surface = "Surface", bottom = "Benthic")))) +
   scale_x_date(
     breaks = quarterly_breaks,
     date_labels="%b-%y") +
@@ -642,7 +614,7 @@ daily_average_pH_edmonds <- daily_average_pH %>%
 
 
 ggsave('C:/Users/kari/OneDrive/Data Work/Port of Seattle Report/port-report/figures/Daily Average pH @ Centennial Park with Site Comparisons 2024-2025.jpg', 
-       width = 6, height = 4, dpi = 500, scale = 1.75)
+       width = 6, height = 4, dpi = 400, scale = 1.75)
                  
 ```
 
@@ -650,7 +622,7 @@ Conductivity –\> salinity
 
 ```{r}
 #conductivity daily average surface and bottom
-#converting microsiements to salinity
+#converting microsiemens to salinity
 install.packages("gsw") #R package for salinity conversion
 library(gsw)
 
@@ -670,22 +642,29 @@ daily_average_salinity <-index_data_final %>%
     n = n(),
     .groups = "drop")
 
+# Add in position = bottom for Edmonds NA positions
+# Thinking that bad data from 9/2024 CON6 is the funky one here
+daily_average_salinity <- daily_average_salinity |>
+  mutate(position = if_else(is.na(position), "bottom", position))
+
 daily_average_salinity <- daily_average_salinity %>% 
   mutate(year = year(date))
-
-#removing rows that have no associated data
-#daily_average_salinity <- daily_average_salinity %>% 
-  #filter(!is.nan(mean_salinity))
-
 
 #removing rows that have >96 and <96 readings
 daily_average_salinity <- daily_average_salinity %>% 
   filter(n == 96)
 
+# Filling in complete time series with NA where no data for plot
+daily_average_salinity <- daily_average_salinity |> 
+  group_by(site, position) |> 
+  complete(date = seq(min(date), max(date), by = "1 day")) |>
+  ungroup()
+
+
 #making the x-axis of my plot into the annual quarters (Jan, Apl, Jul, Oct)
 quarterly_breaks <- seq(
-  from = floor_date(min(mean_salinity$date), "year"),
-  to = ceiling_date(max(mean_salinity$date), "year"),
+  from = floor_date(min(daily_average_salinity$date), "year"),
+  to = ceiling_date(max(daily_average_salinity$date), "year"),
   by = "3 months")
 
 
@@ -695,12 +674,12 @@ daily_average_salinity$position <- factor(
   daily_average_salinity$position, 
   levels = c("surface", "bottom"))
 
-ggplot(daily_average_CON, 
-       aes(x = date, y= mean_CON, color = site)) +
+ggplot(daily_average_salinity, 
+       aes(x = date, y= mean_salinity, color = site)) +
   geom_line(size = 1) +
   geom_point(size = 0.5) +
   facet_wrap(~position, ncol = 1, scales = "free_y",
-             labeller = as_labeller((c(surface = "Surface", bottom = "Bottom")))) +
+             labeller = as_labeller((c(surface = "Surface", bottom = "Benthic")))) +
   scale_x_date(
     breaks = quarterly_breaks,
     date_labels="%b-%y") +
