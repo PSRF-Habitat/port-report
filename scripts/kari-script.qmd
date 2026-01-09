@@ -658,40 +658,41 @@ library(gsw)
 #converting microsiements to mS and kpac to dbar
 index_data_final <- index_data_final %>% 
   mutate(
-    pressure_dbar = if_else(position == "surface", 0, abs_pres_kpa / 10),
+    pressure_dbar = if_else(position == "surface", 0, (abs_pres_kpa / 10) - 10.1325), #using seawater pressure constant 
     conductivity_mS = high_range_microsiemens_per_cm / 1000,
     salinity = gsw_SP_from_C(conductivity_mS, con_temp_c, pressure_dbar))
 
-#daily average CON
-daily_average_CON <-index_data_final %>% 
+#daily average salinity
+daily_average_salinity <-index_data_final %>% 
   group_by(site, date, position) %>% 
   summarise(
-    mean_CON = mean(salinity, na.rm = TRUE),
+    mean_salinity = mean(salinity, na.rm = TRUE),
     n = n(),
     .groups = "drop")
 
-daily_average_CON <- daily_average_CON %>% 
+daily_average_salinity <- daily_average_salinity %>% 
   mutate(year = year(date))
 
 #removing rows that have no associated data
-daily_average_CON <- daily_average_CON %>% 
-  filter(!is.nan(mean_CON))
+#daily_average_salinity <- daily_average_salinity %>% 
+  #filter(!is.nan(mean_salinity))
+
 
 #removing rows that have >96 and <96 readings
-daily_average_CON <- daily_average_CON %>% 
-  filter(n == 95)
+daily_average_salinity <- daily_average_salinity %>% 
+  filter(n == 96)
 
 #making the x-axis of my plot into the annual quarters (Jan, Apl, Jul, Oct)
 quarterly_breaks <- seq(
-  from = floor_date(min(daily_average_pH$date), "year"),
-  to = ceiling_date(max(daily_average_pH$date), "year"),
+  from = floor_date(min(mean_salinity$date), "year"),
+  to = ceiling_date(max(mean_salinity$date), "year"),
   by = "3 months")
 
 
-#plotting two pannel plot with surface and bottom position
+#plotting two panel plot with surface and bottom position
 #surface on top panel, bottom on bottom panel
-daily_average_CON$position <- factor(
-  daily_average_CON$position, 
+daily_average_salinity$position <- factor(
+  daily_average_salinity$position, 
   levels = c("surface", "bottom"))
 
 ggplot(daily_average_CON, 
