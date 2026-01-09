@@ -33,11 +33,13 @@ select_fish_data <- fish_data %>%
   select(site_name, year, transect, species, amount) %>%
   filter(site_name %in% c("Blake Island South", "Grain Terminal", "Freshwater Bay", "Magnolia", "Seattle Waterfront", "Wing Point")) %>%
   filter(year %in% c(2024, 2025))
+
 kelp_data <- kelp_data %>%
   mutate(year = year(mdy(date_start))) %>%
   select(site_name, year, transect, species, amount, distance) %>%
   filter(site_name %in% c("Blake Island South", "Grain Terminal", "Freshwater Bay", "Magnolia", "Seattle Waterfront", "Wing Point")) %>%
   filter(year %in% c(2024, 2025))
+
 invert_data <- invert_data %>%
   mutate(year = year(mdy(date_start))) %>%
   select(site_name, year, transect, species, amount, distance) %>%
@@ -61,7 +63,6 @@ invert_richness <- invert_data %>%
 now moving on to fish only for graphs...
 
 Figure 29 - Centennial Park only. Abundance (or density, TBD) comparing '24/'25, stacking shallow/deep perhaps, by species
-
 ```{r}
 CP_fish_data <- select_fish_data %>%
   filter(site_name %in% c("Grain Terminal")) %>%
@@ -445,6 +446,129 @@ RCF_CP_HC <- ggplot(CP_fish_stratum_perchAndFGF,
 ggsave("C:/R Projects/2025/port-report/figures/ReefCheckFish_CPonly_highCounts.png",RCF_CP_HC, width=4,height=3, dpi = 500, scale = 1.75)
 ```
 
+site comparisons: Step 1, data cleaning
+```{r}
+comp_fish_data <- select_fish_data %>%
+  filter(transect <= 18, !species %in% c("No Fish Found"), !is.na(species))
+
+comp_fish_data <- comp_fish_data %>%
+  mutate(species = case_when(
+    grepl("Rockfish", species) ~ "Rockfish",
+    grepl("YOY", species) ~ "YOY",  # Change any species with "YOY" in the name
+    grepl("Perch", species) ~ "Perch",
+   # is.na(species) ~ "No Fish Found",  # Convert NA to "No Fish Found"
+    species %in% c("Buffalo Sculpin","Red Irish Lord", "Cabezon", "Whitespotted Greenling", "Kelp Greenling (Female)", "Lingcod", "Kelp Greenling (Male)", "Spiny Dogfish") ~ "Other",
+    #species == "No Fish Found" ~ "No Fish Found",  # Keep existing "No Fish Found"
+    TRUE ~ species  # Keep all other names as is
+  ))%>%
+  complete(year, species, site_name, transect, fill = list(amount = 0))
+    
+comp_fish_transect_data <- comp_fish_data %>%
+  group_by(year, site_name, species, transect)%>%
+  summarise(
+    transect_amount = sum(amount, na.rm=TRUE),
+    transect_density = transect_amount/120,
+    .groups="drop")%>%
+     mutate(
+    depth_stratum = case_when(     
+      transect %in% c(1:3, 7:12) ~ "deep",
+      transect %in% c(4:6, 13:18) ~ "shallow",
+      TRUE ~ NA_character_),
+    n_transects = case_when(
+      site_name == "Seattle Waterfront" ~ 3,
+      TRUE ~ 9
+    ))
+
+comp_fish_stratum_data <- comp_fish_transect_data %>%
+  group_by(year, site_name, species, depth_stratum, n_transects)%>%
+  summarise(
+    stratum_amount = sum(transect_amount, na.rm=TRUE),
+    transect_sd = sd(transect_amount),
+    transect_density_sd = sd(transect_density),
+    .groups="drop")
+
+comp_fish_stratum_data <- comp_fish_stratum_data %>%
+  mutate(
+    stratum_density = stratum_amount/n_transects,
+    stratum_cubic_density = stratum_density/120
+  )
+
+comp_fish_stratum_lowDensity <- comp_fish_stratum_data %>%
+filter(!species %in% c("Perch", "Forage Fish"))
+
+comp_fish_stratum_highDensity <- comp_fish_stratum_data %>%
+filter(species %in% c("Perch", "Forage Fish"))
+
+noFGF_comp_fish_stratum <- comp_fish_stratum_data %>%
+  filter(!species %in% c("Forage Fish"))
+```
+
+Step 2: graphing
+```{r}
+ggplot(comp_fish_stratum_lowDensity, 
+       aes(x=species, y=stratum_density, 
+           fill=factor(year), 
+           pattern = depth_stratum)) + 
+  geom_bar_pattern(
+    stat= "identity",
+    position = position_dodge(width = .9, reverse = TRUE),
+    color = "black",
+    width = .7,
+    pattern_fill = "black",
+    pattern_density = 0.2,
+    pattern_spacing = 0.02,
+    pattern_angle = 45) +
+  geom_errorbar(
+    aes(ymin = pmax(stratum_density-transect_sd,0), ymax =stratum_density+transect_sd, 
+       #group = interaction(depth_strata, Year)
+       ),
+    position = position_dodge(width=.9, reverse = TRUE),
+   width = 0.2) +  
+  scale_fill_manual(values=c("2024" = "#66B2FF", "2025" = "#B8E39B")) +
+  scale_pattern_manual(values = c("Deep" = "stripe", "Shallow" = "none")) +
+  facet_wrap(~ site_name, ncol = 3)+
+  theme_minimal() +
+  theme(panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        panel.grid.major.x = element_line(color="gray"),
+        panel.grid.minor.x = element_blank(),
+        panel.border = element_rect(color="black",
+                                    fill=NA,
+                                    size = 1),
+       #legend.position = c(0.98,0.03),
+        #legend.justification = c(1,0),
+        #legend.background = element_rect(fill = "white", color = NA),
+        #legend.margin = margin(4,4,4,4),
+        # Increase legend text and key size
+        #legend.text = element_text(size = 10),          # Larger legend text
+        #legend.title = element_text(size = 11),         # Larger legend title
+        #legend.key.size = unit(1, "lines"),           # Larger legend keys
+        #legend.key.height = unit(0.8, "lines"),         # Adjust the height of legend keys (if necessary)
+        #legend.key.width = unit(1, "lines"),
+        axis.title.x = element_text(size = 12),         # Larger x-axis label
+        axis.title.y = element_text(size = 12),         # Larger y-axis label
+        axis.text.x = element_text(size = 9),  # Larger x-axis tick labels
+        axis.text.y = element_text(lineheight = 0.8, size = 10)) +       # Larger y-axis tick labels)
+  labs(x="Species", y = expression(Density~(m^2))) +
+  guides(fill = guide_legend(title = "Year", order = 1,
+                             override.aes = (list(
+                               pattern = "none",
+                               pattern_Density = 0,
+                               pattern_fill = NA,
+                               pattern_Spacing = 0,
+                               pattern_angle = 0,
+                               color = "black"))),
+         pattern = guide_legend(title = "Depth Strata", order = 2,
+                                override.aes = list(
+                                  fill = "white",
+                                  color = "black")))+
+  coord_flip()
+ 
+
+##
+ggsave('~/Desktop/PSRF-R Work/Kelp at All Sites.PNG', width = 6, height = 5, dpi = 500)
+
+```
 
 
 
