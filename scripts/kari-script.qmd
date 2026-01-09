@@ -568,9 +568,12 @@ daily_average_pH <-index_data_final %>%
     n = n(),
     .groups = "drop")
 
-daily_average_pH <- daily_average_pH %>% 
-  mutate(year = year(date))
+# daily_average_pH <- daily_average_pH %>% 
+#   mutate(year = year(date))
 
+#removing rows with pH >9
+daily_average_pH <- daily_average_pH %>%
+  filter(mean_pH < 9)
 
 #removing rows that have >96 and <96 readings
 daily_average_pH <- daily_average_pH %>% 
@@ -581,10 +584,9 @@ daily_average_pH <- daily_average_pH |>
   group_by(site, position) |> 
   complete(date = seq(min(date), max(date), by = "1 day")) |>
   ungroup()
-
-#removing rows with pH >9
-daily_average_pH <- daily_average_pH %>% 
-  filter(mean_pH < 9)
+  
+daily_average_pH <- daily_average_pH %>%
+  mutate(across(where(is.numeric), ~ ifelse(is.nan(.), NA, .)))
 
 #making the x-axis of my plot into the annual quarters (Jan, Apl, Jul, Oct)
 quarterly_breaks <- seq(
