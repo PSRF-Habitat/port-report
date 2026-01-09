@@ -369,13 +369,15 @@ all_other_species <- ggplot(
 
 print(all_other_species)
 
-# Combine both plots using patchwork
+(high_density_species / all_other_species) +
+  plot_layout(axis_titles = "collect")
+
+# Combine both plots using patchwork----
 library(ggplot2)
 library(ggpattern)
 library(grid)
 library(gridExtra)
 library(patchwork)
-
 
 #first removing the axis labels/titles
 remove.titles <- theme(
