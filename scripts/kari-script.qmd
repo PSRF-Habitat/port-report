@@ -625,6 +625,8 @@ Conductivity –\> salinity
 #converting microsiemens to salinity
 install.packages("gsw") #R package for salinity conversion
 library(gsw)
+#citation of 'gsw' package
+citation("gsw")
 
 
 #converting microsiements to mS and kpac to dbar
@@ -684,7 +686,7 @@ ggplot(daily_average_salinity,
     breaks = quarterly_breaks,
     date_labels="%b-%y") +
 labs(x = "Month-Year",
-     y = "Daily Average Salinity",
+     y = "Daily Average Salinity (ppt)",
      color = "Site") +
   theme_minimal() +
   theme(panel.border=element_rect(color="black",
@@ -693,6 +695,7 @@ labs(x = "Month-Year",
         panel.grid.major = element_line(color = "gray", size = 0.5),  # Major grid lines
         panel.grid.minor = element_line(color = "lightgray", size = 0.25),  # Minor grid lines
         axis.title.x = element_text(margin = margin(t = 10)),
+        strip.text = element_text(face = "bold"),
         legend.position = c("right"),
         legend.justification = c("center"),
         legend.background = element_rect(fill = "white", color = NA),
@@ -711,5 +714,8 @@ labs(x = "Month-Year",
                                            "jeffersonhead" = "Jefferson Head",
                                            "edmonds" = "Edmonds",
                                            "wingpoint" = "Wing Point"))
+
+ggsave('C:/Users/kari/OneDrive/Data Work/Port of Seattle Report/port-report/figures/Daily Average salinity @ Centennial Park with Site Comparisons 2024-2025.jpg', 
+       width = 6, height = 4, dpi = 400, scale = 1.75)
 
 ```
