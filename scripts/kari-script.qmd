@@ -509,7 +509,10 @@ columns_to_keep <-
     "con_temp_c",
     "date",
     "time",
-    "abs_pres_kpa")
+    "abs_pres_kpa",
+    "wl_logger_id",
+    "con_logger_id",
+    "wl_temp_c")
 
 index_data_final <- index_data_filtered %>% 
   select(all_of(columns_to_keep))
@@ -634,7 +637,12 @@ index_data_final <- index_data_final %>%
   mutate(
     pressure_dbar = if_else(position == "surface", 0, (abs_pres_kpa / 10) - 10.1325), #using seawater pressure constant 
     conductivity_mS = high_range_microsiemens_per_cm / 1000,
-    salinity = gsw_SP_from_C(conductivity_mS, con_temp_c, pressure_dbar))
+    salinity = case_when(site == "centennialpark" & 
+                           con_logger_id == "CON1" & # CON1 temp readings bad - use WL temp readings
+                           position == "bottom" ~
+                           gsw_SP_from_C(conductivity_mS, wl_temp_c, pressure_dbar),
+                         # Use temp from CON sensor for all others 
+                         TRUE ~ gsw_SP_from_C(conductivity_mS, con_temp_c, pressure_dbar)))
 
 #daily average salinity
 daily_average_salinity <-index_data_final %>% 
@@ -675,6 +683,62 @@ quarterly_breaks <- seq(
 daily_average_salinity$position <- factor(
   daily_average_salinity$position, 
   levels = c("surface", "bottom"))
+
+# Replace dates with "bad data" with NA
+daily_average_salinity <- daily_average_salinity |>
+  mutate(mean_salinity = 
+           case_when(site == "edmonds" &
+                       position == "surface" &
+                       date >= as.Date("2024-10-24") &
+                       date <= as.Date("2024-12-12") ~ NA_real_,
+                     
+                     site == "edmonds" &
+                       position == "surface" &
+                       date >= as.Date("2025-04-23") &
+                       date <= as.Date("2025-07-13") ~ NA_real_, 
+                     
+                     site == "jeffersonhead" &
+                       position == "surface" &
+                       date >= as.Date("2025-04-27") &
+                       date <= as.Date("2025-07-13") ~ NA_real_, 
+                     
+                     site == "wingpoint" &
+                       position == "surface" &
+                       date >= as.Date("2024-11-07") &
+                       date <= as.Date("2025-03-13") ~ NA_real_, 
+                     
+                     site == "centennialpark" &
+                       position == "bottom" &
+                       date >= as.Date("2025-05-14") &
+                       date <= as.Date("2025-06-11") ~ NA_real_, 
+                     
+                     site == "edmonds" &
+                       position == "bottom" &
+                       date >= as.Date("2025-05-04") &
+                       date <= as.Date("2025-07-13") ~ NA_real_, 
+                     
+                     site == "jeffersonhead" &
+                       position == "bottom" &
+                       date >= as.Date("2025-06-11") &
+                       date <= as.Date("2025-08-27") ~ NA_real_, 
+                     
+                     site == "jeffersonhead" &
+                       position == "bottom" &
+                       date >= as.Date("2025-09-29") ~ NA_real_, 
+                     
+                     site == "wingpoint" &
+                       position == "bottom" &
+                       date >= as.Date("2025-07-16") &
+                       date <= as.Date("2025-07-31") ~ NA_real_, 
+                     
+                     site == "edmonds" &
+                       position == "bottom" &
+                       date >= as.Date("2025-09-1") ~ NA_real_, 
+                     
+                     TRUE ~ mean_salinity)
+         )
+
+
 
 ggplot(daily_average_salinity, 
        aes(x = date, y= mean_salinity, color = site)) +
@@ -719,3 +783,10 @@ ggsave('C:/Users/kari/OneDrive/Data Work/Port of Seattle Report/port-report/figu
        width = 6, height = 4, dpi = 400, scale = 1.75)
 
 ```
+
+
+
+
+
+
+
