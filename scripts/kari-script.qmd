@@ -498,6 +498,15 @@ sites_to_keep <-
 index_data_filtered <- index_data %>% 
   filter(site %in% sites_to_keep) 
 
+##a one off to try and figure out the range of DO values for Centennial Park for 1/29/2026 edits)
+index_data_filtered%>%
+  filter(site == "centennialpark") %>%       # filter to your site
+  group_by(position) %>%                     # separate Surface and Bottom
+  summarise(
+    min_DO = min(do_conc_mg_per_L, na.rm = TRUE),
+    max_DO = max(do_conc_mg_per_L, na.rm = TRUE),
+    .groups = "drop"
+  )
 
 #filter columns to keep
 columns_to_keep <-
@@ -778,6 +787,11 @@ labs(x = "Month-Year",
                                            "jeffersonhead" = "Jefferson Head",
                                            "edmonds" = "Edmonds",
                                            "wingpoint" = "Wing Point"))
+
+
+#just looking at benthic jeff head data and what's going on with the values >40ppt!
+jeffhead <- daily_average_salinity %>%
+  filter(site == "jeffersonhead")
 
 ggsave('C:/Users/kari/OneDrive/Data Work/Port of Seattle Report/port-report/figures/Daily Average salinity @ Centennial Park with Site Comparisons 2024-2025.jpg', 
        width = 6, height = 4, dpi = 400, scale = 1.75)
