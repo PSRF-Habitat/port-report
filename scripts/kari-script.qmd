@@ -53,6 +53,15 @@ inverts_comparison_sites <- inverts_comparison_sites %>%
 #changing Grain Terminal site name to Centennial Park in Site column
 inverts_comparison_sites <- inverts_comparison_sites %>% 
   mutate(site_name = ifelse(site_name == "Grain Terminal", "Centennial Park", site_name))
+
+##one off looking at the different distinct speacies from 2024 & 2025
+inverts_comparison_sites %>% 
+  filter(site_name == "Centennial Park") %>% 
+  group_by(Year) %>%                      # group by survey year
+  summarise(
+    n_species = n_distinct(species),      # count unique species
+    .groups = "drop"
+  )
 ```
 
 *Comparing 2024 and 2025 inverts in the dataframe and completing the table with all transects being complete*
